@@ -1088,6 +1088,58 @@ function calcularEdad(fechaNacimiento) {
   return edad >= 0 ? edad : "";
 }
 
+function validarRutsUnicos() {
+  // Obtén los valores de los campos relevantes
+  const rutAlumno = document.querySelector('[name="campo7"]').value.trim();
+  const rutTitular = document.querySelector('[name="campo32"]').value.trim();
+  const rutSuplente = document.querySelector('[name="campo45"]').value.trim();
+  const rutMadre = document.querySelector('[name="campo56"]').value.trim();
+  const rutPadre = document.querySelector('[name="campo65"]').value.trim();
+
+  // Obtén los cargos (si los hay)
+  const cargoMadre = document.getElementById('cargoMadre')?.value;
+  const cargoPadre = document.getElementById('cargoPadre')?.value;
+
+  // Crea un mapa para guardar ocurrencias
+  const ruts = [
+    {rut: rutAlumno, origen: "Alumno"},
+    {rut: rutTitular, origen: "Apoderado Titular"},
+    {rut: rutSuplente, origen: "Apoderado Suplente"},
+    {rut: rutMadre, origen: "Madre", cargo: cargoMadre},
+    {rut: rutPadre, origen: "Padre", cargo: cargoPadre},
+  ];
+
+  // Busca duplicados
+  for (let i = 0; i < ruts.length; i++) {
+    for (let j = i + 1; j < ruts.length; j++) {
+      if (ruts[i].rut && ruts[i].rut === ruts[j].rut) {
+        // Permitir solo si uno es titular/suplente y otro es madre/padre con mismo cargo
+        if (
+          (ruts[i].origen === "Apoderado Titular" && ruts[j].cargo === "titular") ||
+          (ruts[j].origen === "Apoderado Titular" && ruts[i].cargo === "titular") ||
+          (ruts[i].origen === "Apoderado Suplente" && ruts[j].cargo === "suplente") ||
+          (ruts[j].origen === "Apoderado Suplente" && ruts[i].cargo === "suplente")
+        ) {
+          continue; // permitido
+        }
+        // Si no está permitido, muestra error y retorna false
+        mostrarErrorEnPagina(
+          "Hay un error en el campo RUT (duplicado entre " + ruts[i].origen + " y " + ruts[j].origen + ") en la página " + ruts[i].pagina + ". Por favor corrígelo para poder guardar.",
+          ruts[i].pagina
+        );
+        return false;
+      }
+    }
+  }
+  return true;
+}
+function mostrarErrorEnPagina(msg, pagina) {
+  const paginas = document.querySelectorAll('.pagina-form');
+  const errorDiv = paginas[pagina - 1].querySelector('.error-message');
+  errorDiv.textContent = msg;
+  errorDiv.style.display = '';
+}
+
 function inicializarFormulario(datos) {
   // --- CURSO (campo1) ---
   var selectCurso = document.getElementById('campo1');
@@ -2807,10 +2859,15 @@ if (repitenteCombo && repitenteCombo.value === "No") {
       data.campo12 = document.getElementById('campo12_combo').value;
     }
   }
+  if (!validarRutsUnicos()) {
+    // Si la validación falla, vuelve a habilitar los botones y NO guarda nada
+    submitButtons.forEach(btn => btn.disabled = false);
+    return false;
+  }
+
   
   google.script.run
     .withSuccessHandler(() => {
-      alert("Datos guardados correctamente");
       google.script.run.actualizarFichaMatricula();
       // Rehabilita los botones de submit tras guardar
       submitButtons.forEach(btn => btn.disabled = false);
