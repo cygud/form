@@ -924,6 +924,8 @@ function validarTodasLasPaginas() {
         }
       }
 
+      
+
       // Validar RUT
       if (inp.classList.contains('rut') && inp.value) {
         if (!validarRut(inp.value, inp)) {
@@ -937,6 +939,9 @@ function validarTodasLasPaginas() {
           }
         }
       }
+      if (validarRutsUnicos() === false) {
+        hayError = true;
+      } 
       // Email
       if (inp.type === "email" && inp.value) {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value)) {
@@ -1102,12 +1107,12 @@ function validarRutsUnicos() {
 
   // Crea un mapa para guardar ocurrencias
   const ruts = [
-    {rut: rutAlumno, origen: "Alumno"},
-    {rut: rutTitular, origen: "Apoderado Titular"},
-    {rut: rutSuplente, origen: "Apoderado Suplente"},
-    {rut: rutMadre, origen: "Madre", cargo: cargoMadre},
-    {rut: rutPadre, origen: "Padre", cargo: cargoPadre},
-  ];
+  {rut: rutAlumno, origen: "Alumno", pagina: 1},
+  {rut: rutTitular, origen: "Apoderado Titular", pagina: 4},
+  {rut: rutSuplente, origen: "Apoderado Suplente", pagina: 5},
+  {rut: rutMadre, origen: "Madre", cargo: cargoMadre, pagina: 6},
+  {rut: rutPadre, origen: "Padre", cargo: cargoPadre, pagina: 6},
+];
 
   // Busca duplicados
   for (let i = 0; i < ruts.length; i++) {
@@ -2859,11 +2864,7 @@ if (repitenteCombo && repitenteCombo.value === "No") {
       data.campo12 = document.getElementById('campo12_combo').value;
     }
   }
-  if (!validarRutsUnicos()) {
-    // Si la validación falla, vuelve a habilitar los botones y NO guarda nada
-    submitButtons.forEach(btn => btn.disabled = false);
-    return false;
-  }
+  
 
   
   google.script.run
