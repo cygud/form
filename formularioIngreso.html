@@ -1,0 +1,2826 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+
+    .input-empty {
+      border: 2px solid orange !important;
+      background: #fffbe6 !important;
+    }
+    .input-filled {
+      border: 2px solid #2ecc40 !important;
+      background: #e8fbe5 !important;
+    }
+    .half-width {
+      flex: 1 1 50%;
+      max-width: 50%;
+      min-width: 150px; /* o el mínimo que desees */
+      width: 50%;
+      align-self: flex-start; /* Alineación vertical si fuera necesario */
+    }
+    .nee-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 32px; /* menos espacio vertical, más espacio horizontal si quieres */
+    align-items: center;
+    }
+  
+    .nee-checkboxes label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    gap: 5px;
+    margin-bottom: 0;
+    white-space: nowrap;
+    }
+    /* ==== ESTILOS DEL FORMULARIO ==== */
+    .input-error {
+      border: 2px solid #e53935 !important;
+      background: #fff6f6 !important;
+    }
+    .error-message {
+      color: #e53935;
+      font-weight: bold;
+      margin: 8px 0 0 0;
+    }
+    .modal-bg {
+      position: fixed;
+      z-index: 99999;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(40,40,60,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-error {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #4443;
+      padding: 28px 22px 22px 22px;
+      min-width: 300px;
+      max-width: 90vw;
+      text-align: center;
+      border: 2px solid #e53935;
+    }
+    .modal-error strong {
+      color: #e53935;
+      font-size: 1.1em;
+    }
+    .modal-error button {
+      margin-top: 14px;
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 18px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .modal-error button:hover {
+      background: #1565c0;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 680px;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 160px;
+      flex: 1 1 160px;
+    }
+    .form-group label {
+      margin-bottom: 3px;
+      font-size: 0.95em;
+    }
+    input[type="text"], input[type="date"], input[type="email"], select {
+      width: auto;
+      min-width: 0;
+      padding: 5px 8px;
+      font-size: 1em;
+      border-radius: 4px;
+      border: 1px solid #bbb;
+    }
+    .full-width {
+      flex: 1 1 100%;
+      min-width: 0;
+      width: 100%;
+    }
+    .repitente-multiple-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .repitente-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .repitente-checkboxes input[disabled] + label,
+    .repitente-checkboxes input[disabled] {
+     opacity: 0.7;
+     cursor: not-allowed;
+    }
+    #otroColegio {
+      display: none;
+      min-width: 130px;
+    }
+    button[type="submit"], button[type="button"] {
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      margin-top: 16px;
+      padding: 8px 20px;
+      font-size: 1.05em;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #3e8e41;
+      color: #fff;
+    }
+    .pagina-form {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .pagina-form.active {
+      display: flex;
+    }
+    .botonera {
+      position: fixed;
+      right: 10px;     /* Separación desde el borde derecho de la pantalla */
+      bottom: 10px;    /* Separación desde el borde inferior */
+      background: #fff;
+      padding: 10px 16px 8px 16px;
+      z-index: 1000;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      border-top: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px #3332;
+      }
+    .nee-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 6px;
+    }
+    .salud-combo-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    .salud-combo-row .form-group {
+      min-width: 180px;
+      flex: 1 1 200px;
+    }
+    #alergicoCualDiv, #medicamentosCualDiv {
+      margin-top: 5px;
+    }
+    .guardar-e-ir {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 12px 10px 8px 10px;
+      margin-top: 10px;
+      background: #f6f6fa;
+    }
+    .guardar-e-ir button {
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 7px 14px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .guardar-e-ir button:hover {
+      background: #1565c0;
+    }
+    #btnLimpiarForm {
+      background: #e53935;
+      }
+      #btnLimpiarForm:hover {
+        background: #8b0000;
+      }
+      .width-full {
+  flex: 1 1 100% !important;
+  min-width: 100% !important;
+}
+
+.width-half {
+  flex: 1 1 48% !important;
+  min-width: 250px !important;
+}
+
+.width-quarter {
+  flex: 0 1 20% !important;
+  min-width: 120px !important;
+}
+
+.width-third {
+  flex: 0 1 32% !important;
+  min-width: 200px !important;
+}
+
+.width-small {
+  flex: 0 1 100px !important;
+  min-width: 80px !important;
+  max-width: 120px !important;
+}
+
+.width-medium {
+  flex: 0 1 200px !important;
+  min-width: 180px !important;
+}
+
+.rut-group {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 250px !important;
+  min-width: 250px !important;
+}
+
+/* Ajuste para campos con label inline */
+.input-with-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ajuste para direcciones */
+.address-group {
+  flex: 1 1 100% !important;
+  min-width: 100% !important;
+}
+
+/* Contenedor de información personal */
+.personal-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+}
+  </style>
+</head>
+<!-- Header con botón limpiar y título -->
+<div class="form-header" style="display: flex; align-items: center;  justify-content: flex-end;">
+  <button type="button" id="btnLimpiarForm" style="color: #fff; font-weight: bold; border: none; border-radius: 5px; font-size: 1em; cursor: pointer;">
+  Limpiar Todo
+</button>
+</div>
+<body>
+  
+  <form id="fichaForm">
+ <div id="errorGeneral" class="error-message" style="display:none"></div>
+    <!-- ========== Página 1: Antecedentes del Estudiante ========== -->
+    <section class="pagina-form active" id="pagina1">
+     
+  <div class="error-message" style="display:none"></div>
+  <h3>Antecedentes del estudiante</h3>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Curso:</label>
+      <select name="campo1" id="campo1">
+        <option value="">Seleccione...</option>
+        <!-- Opciones se agregan por JS -->
+      </select>
+    </div>
+    <div class="form-group">
+      <label>N° registro:</label>
+      <input type="text" name="campo2" value="<?= datos.campo2 || '' ?>">
+    </div>
+    <div class="form-group">
+      <label>Fecha matrícula:</label>
+      <input type="date" name="campo3" value="<?= datos.campo3 || '' ?>">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Apellido Paterno:</label>
+      <input type="text" name="campo4" value="<?= datos.campo4 || '' ?>">
+    </div>
+    <div class="form-group">
+      <label>Apellido Materno:</label>
+      <input type="text" name="campo5" value="<?= datos.campo5 || '' ?>">
+    </div>
+    
+    <div class="form-group full-width">
+      <label>Nombres:</label>
+      <input type="text" name="campo6" value="<?= datos.campo6 || '' ?>">
+    </div>
+  </div>
+<div class="form-row">
+  <div class="form-group width-third">
+    <label>Rut:</label>
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <input type="text" class="rut" placeholder="xxxxxxxx-x" name="campo7" id="campo7" value="<?= datos.campo7 || '' ?>">
+      <label style="font-size:0.92em;">
+        <input type="checkbox" id="rutProvisional7" style="margin-right:3px;">Rut Provisional
+      </label>
+    </div>
+  </div>
+  <div class="form-group width-quarter">
+    <label>F. Nacimiento:</label>
+    <input type="date" name="campo8" value="<?= datos.campo8 || '' ?>">
+  </div>
+  <div class="form-group width-small">
+    <label>Edad:</label>
+    <input type="text" name="campo9" value="<?= datos.campo9 || '' ?>" readonly>
+  </div>
+  <div class="form-group">
+      <label>Comuna:</label>
+      <select name="campo11" id="campo11">
+        <option value="">Seleccione...</option>
+        <!-- Opciones se agregan por JS -->
+        
+      </select>
+      <input type="text" id="campo11_otro" name="campo11_otro" placeholder="Especifique comuna" style="display:none;">
+    </div>
+</div>
+  <div class="form-row">
+    <div class="form-group width-full">
+      <label>Dirección:</label>
+      <input type="text" name="campo10" id="campo10" value="<?= datos.campo10 || '' ?>">
+    </div>
+     <div class="form-group width-quarter">
+      <label>Nacionalidad:</label>
+      <input type="text" name="campo13" value="<?= datos.campo13 || 'Chilena' ?>">
+    </div>
+
+    
+<div class="form-group width-quarter">
+  <label>Vive con:</label>
+  <select name="campo12_combo" id="campo12_combo">
+    <option value="">Seleccionar...</option>
+    <option value="Ambos padres">Ambos padres</option>
+    <option value="Padre">Padre</option>
+    <option value="Madre">Madre</option>
+    <option value="Otro">Otro</option>
+  </select>
+  <input type="text" name="campo12_otro" id="campo12_otro" placeholder="¿Con quién vive?" style="display:none;" maxlength="120">
+</div>
+
+<!-- Agregar aquí los selectores de cargo -->
+<div class="form-group width-third">
+  <label>El madre es?:</label>
+  <select id="cargoMadre" name="cargoMadre">
+     <option value="">Seleccione...</option>
+    <option value="titular">Apoderado Titular</option>
+    <option value="suplente">Apoderado Suplente</option>
+    <option value="">No aplica</option>
+  </select>
+</div>
+
+<div class="form-group width-quarter">
+
+  <label>El padre es?:</label>
+  <select id="cargoPadre" name="cargoPadre">
+    <option value="">Seleccione...</option>
+    <option value="titular">Apoderado Titular</option>
+    <option value="suplente">Apoderado Suplente</option>
+    <option value="">No aplica</option>
+  </select>
+</div>
+<div class="form-group half-width">
+  <label>¿Repitente en algún curso?</label>
+  <select id="repitenteCombo" name="repitenteCombo">
+    <option value="">Seleccione...</option>
+    <option value="No">No</option>
+    <option value="Sí">Sí</option>
+  </select>
+  <div class="repitente-checkboxes" id="repitenteCheckboxesRow">
+    <label><input type="checkbox" name="campo14_1" value="Pre-Kinder" disabled> Pre-Kinder</label>
+    <label><input type="checkbox" name="campo14_2" value="Kinder" disabled> Kinder</label>
+    <label><input type="checkbox" name="campo14_3" value="1°básico" disabled> 1°básico</label>
+    <label><input type="checkbox" name="campo14_4" value="2°básico" disabled> 2°básico</label>
+    <label><input type="checkbox" name="campo14_5" value="3°básico" disabled> 3°básico</label>
+    <label><input type="checkbox" name="campo14_6" value="4°básico" disabled> 4°básico</label>
+    <label><input type="checkbox" name="campo14_7" value="5°básico" disabled> 5°básico</label>
+    <label><input type="checkbox" name="campo14_8" value="6°básico" disabled> 6°básico</label>
+    <label><input type="checkbox" name="campo14_9" value="7°básico" disabled> 7°básico</label>
+    <label><input type="checkbox" name="campo14_10" value="8°básico" disabled> 8°básico</label>
+  </div>
+</div>
+<div class="form-group half-width">
+      <label>Colegio de procedencia:</label>
+      <select name="campo15" id="campo15">
+        <option value="">Seleccione...</option>
+        <!-- Opciones se agregan por JS -->
+      </select>
+      <input type="text" id="campo15_otro" name="campo15_otro" placeholder="Especifique colegio" style="display:none;">
+    </div>
+</div>
+
+  <div class="botonera">
+    <button type="button" class="btn-siguiente" data-next="pagina2">Siguiente</button>
+    <button type="submit">Guardar en ficha</button>
+  </div>
+</section>
+    <!-- ========== Página 2: NEE ========== -->
+    <section class="pagina-form" id="pagina2">
+      <div class="error-message" style="display:none"></div>
+      <h3>Necesidades Educativas Especiales (N.E.E.)</h3>
+
+
+<!-- Página de NEE (fragmento de los campos) -->
+<div class="form-row">
+  <div class="form-group">
+    <label>¿Pertenece al P.I.E.(Programa de integracion estudiantil)? Sí/No:</label>
+    <select name="campo17" id="campo17">
+      <option value="">Seleccione...</option>
+      <option value="Sí">Sí</option>
+      <option value="No">No</option>
+    </select>
+  </div>
+</div>
+<div class="form-row" id="neeCheckboxesRow" style="display:none;">
+  <div class="nee-checkboxes">
+    <label><input type="checkbox" name="campo19" value="X"> T.E.L."Trastorno Específico del Lenguaje"</label> <br><br>
+    <label><input type="checkbox" name="campo20" value="X"> D.I. "Discapacidad Intelectual"</label><br><br>
+    <label><input type="checkbox" name="campo21" value="X"> D.E.A. "Dificultades Específicas del Aprendizaje"</label><br><br>
+    <label><input type="checkbox" name="campo22" value="X"> F.I.L. "Funcionamiento Intelectual Limítrofe"</label><br><br>
+    <label><input type="checkbox" name="campo23" value="X"> D.I.M. "Discapacidad Intelectual Moderada"</label>
+  </div>
+</div>
+<!-- ...Tu HTML posterior... -->
+      <div class="botonera">
+        <button type="button" class="btn-anterior" data-prev="pagina1">Anterior</button>
+        <button type="button" class="btn-siguiente" data-next="pagina3">Siguiente</button>
+        <button type="submit">Guardar en ficha</button>
+      </div>
+    </section>
+
+    <!-- ========== Página 3: Antecedentes de Salud ========== -->
+    <section class="pagina-form" id="pagina3">
+      <div class="error-message" style="display:none"></div>
+      <h3>Antecedentes de salud del estudiante</h3>
+     <!-- ¿Es alérgico a algún alimento? -->
+<div class="form-group">
+  <label>¿Es alérgico a algún alimento?</label>
+  <select name="campo25_combo" id="campo25_combo">
+    <option value="">Seleccione...</option>
+    <option value="Sí">Sí</option>
+    <option value="No">No</option>
+  </select>
+  <input type="text" name="campo25_texto" id="campo25_texto" placeholder="¿Cuál/es? Ingreselos Aquí" style="display:none;" maxlength="120">
+</div>
+
+<!-- ¿Enfermedad preexistente? -->
+<div class="form-group">
+  <label>¿Enfermedad preexistente?</label>
+  <select name="campo26_combo" id="campo26_combo">
+    <option value="">Seleccione...</option>
+    <option value="Sí">Sí</option>
+    <option value="No">No</option>
+  </select>
+  <input type="text" name="campo26_texto" id="campo26_texto" placeholder="¿Cuál/es? Ingreselas Aquí" style="display:none;" maxlength="120">
+</div>
+
+<!-- ¿Utiliza medicamentos? -->
+<div class="form-group">
+  <label>¿Utiliza medicamentos?</label>
+  <select name="campo27_combo" id="campo27_combo">
+    <option value="">Seleccione...</option>
+    <option value="Sí">Sí</option>
+    <option value="No">No</option>
+  </select>
+  <input type="text" name="campo27_texto" id="campo27_texto" placeholder="¿Cuál/es? Ingreselos Aquí" style="display:none;" maxlength="120">
+</div>
+      <div class="botonera">
+        <button type="button" class="btn-anterior" data-prev="pagina2">Anterior</button>
+        <button type="button" class="btn-siguiente" data-next="pagina4">Siguiente</button>
+        <button type="submit">Guardar en ficha</button>
+      </div>
+    </section>
+
+    <!-- ========== Página 4: Apoderado Titular ========== -->
+    <section class="pagina-form" id="pagina4">
+      <div class="error-message" style="display:none"></div>
+      <h3>Antecedentes del apoderado titular</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Apellido paterno:</label>
+          <input type="text" name="campo29" value="<?= datos.campo29 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Apellido materno:</label>
+          <input type="text" name="campo30" value="<?= datos.campo30 || '' ?>">
+        </div>
+        <div class="form-group full-width">
+          <label>Nombres:</label>
+          <input type="text" name="campo31" value="<?= datos.campo31 || '' ?>">
+        </div>
+        <div class="form-group">
+    <label>Rut:</label>
+    <div class="form-group full-width" >
+      <input type="text" class="rut" placeholder="xxxxxxxx-x" name="campo32" id="campo32" value="<?= datos.campo32 || '' ?>">
+      <label style="font-size:0.92em;">
+        <input type="checkbox" id="rutProvisional32" >Rut Provisional
+      </label>
+    </div>
+  </div>
+</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Dirección:</label>
+          <input type="text" name="campo33" id="campo33" value="<?= datos.campo33 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Comuna:</label>
+          <select name="campo34" id="campo34">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+        </div>
+        <div class="form-group">
+          <label>Teléfono:</label>
+          <input type="text" class="telefono" name="campo35" value="<?= datos.campo35 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" name="campo36" value="<?= datos.campo36 || '' ?>">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Profesión/Ocupación:</label>
+          <input type="text" name="campo37" value="<?= datos.campo37 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Escolaridad:</label>
+          <select name="campo38" id="campo38">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+<input type="text" id="campo38_otro" name="campo38_otro" placeholder="Especifique escolaridad" style="display:none;">
+        </div>
+        <div class="form-group">
+          <label>Parentesco con el estudiante:</label>
+          <select name="campo39" id="campo39">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+<input type="text" id="campo39_otro" name="campo39_otro" placeholder="Especifique parentesco" style="display:none;">
+        </div>
+        <div class="form-group width-half"  id="apoderadoTitularCursosRow">
+  <label>¿Apoderado de otros estudiantes en la Escuela?:</label>
+  <div id="apoderadoTitularCursosCheckboxes">
+    <!-- Aquí se llenarán los checkboxes por JS -->
+  </div>
+</div>
+      </div>
+      <div class="botonera">
+        <button type="button" class="btn-anterior" data-prev="pagina3">Anterior</button>
+        <button type="button" class="btn-siguiente" data-next="pagina5">Siguiente</button>
+        <button type="submit">Guardar en ficha</button>
+      </div>
+      
+    </section>
+
+    <!-- ========== Página 5: Apoderado Suplente ========== -->
+    <section class="pagina-form" id="pagina5">
+      <div class="error-message" style="display:none"></div>
+      <h3>Antecedentes del apoderado suplente</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Apellido paterno:</label>
+          <input type="text" name="campo42" value="<?= datos.campo42 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Apellido materno:</label>
+          <input type="text" name="campo43" value="<?= datos.campo43 || '' ?>">
+        </div>
+        <div class="form-group full-width">
+          <label>Nombres:</label>
+          <input type="text" name="campo44" value="<?= datos.campo44 || '' ?>">
+        </div>
+         <div class="form-group">
+    <label>Rut:</label>
+    <div class="form-group full-width">
+      <input type="text" class="rut" placeholder="xxxxxxxx-x" name="campo45" id="campo45" value="<?= datos.campo45 || '' ?>">
+      <label style="font-size:0.92em;">
+        <input type="checkbox" id="rutProvisional45" style="margin-right:3px;">Rut Provisional
+      </label>
+    </div>
+  </div>
+</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Dirección:</label>
+          <input type="text" name="campo46" id="campo46" value="<?= datos.campo46 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Comuna:</label>
+          <select name="campo47" id="campo47">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+        </div>
+        <div class="form-group">
+          <label>Teléfono:</label>
+          <input type="text" class="telefono" name="campo48" value="<?= datos.campo48 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" name="campo49" value="<?= datos.campo49 || '' ?>">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Profesión/Ocupación:</label>
+          <input type="text" name="campo50" value="<?= datos.campo50 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Escolaridad:</label>
+          <select name="campo51" id="campo51">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+<input type="text" id="campo51_otro" name="campo51_otro" placeholder="Especifique escolaridad" style="display:none;">
+        </div>
+        <div class="form-group">
+          <label>Parentesco con el estudiante:</label>
+          <select name="campo52" id="campo52">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+<input type="text" id="campo52_otro" name="campo52_otro" placeholder="Especifique parentesco" style="display:none;">
+        </div>
+        <div class="form-group half-width" id="apoderadoSuplenteCursosRow" >
+  <label>¿Apoderado de otros estudiantes en la Escuela?:</label>
+  <div id="apoderadoSuplenteCursosCheckboxes">
+    <!-- Aquí se llenarán los checkboxes por JS -->
+  </div>
+</div>
+      <div class="botonera">
+        <button type="button" class="btn-anterior" data-prev="pagina4">Anterior</button>
+        <button type="button" class="btn-siguiente" data-next="pagina6">Siguiente</button>
+        <button type="submit">Guardar en ficha</button>
+      </div>
+    </section>
+
+    <!-- ========== Página 6: Familiares (Madre y Padre) ========== -->
+    <section class="pagina-form" id="pagina6">
+      <div class="error-message" style="display:none"></div>
+      <h3>Antecedentes Familiares del Estudiante</h3>
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Nombre completo de la Madre:</label>
+          <input type="text" name="campo55" value="<?= datos.campo55 || '' ?>">
+        </div>
+       <div class="form-group">
+          <label>Rut (Madre):</label>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <input type="text" class="rut" placeholder="xxxxxxxx-x" name="campo56" id="campo56" value="<?= datos.campo56 || '' ?>">
+            <label style="font-size:0.92em;">
+              <input type="checkbox" id="rutProvisional56" style="margin-right:3px;">Rut Provisional
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Fecha de Nacimiento (Madre):</label>
+          <input type="date" name="campo57" value="<?= datos.campo57 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Dirección (Madre):</label>
+          <input type="text" name="campo58" id="campo58" value="<?= datos.campo58 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Comuna:</label>
+          <select name="campo59" id="campo59">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+        </div>
+        <div class="form-group">
+          <label>Teléfono (Madre):</label>
+          <input type="text" class="telefono" name="campo60" value="<?= datos.campo60 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Escolaridad:</label>
+          <select name="campo61" id="campo61">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+<input type="text" id="campo61_otro" name="campo61_otro" placeholder="Especifique escolaridad" style="display:none;">
+        </div>
+        <div class="form-group">
+          <label>Profesión/Ocupación (Madre):</label>
+          <input type="text" name="campo62" value="<?= datos.campo62 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Email (Madre):</label>
+          <input type="email" name="campo63" value="<?= datos.campo63 || '' ?>">
+        </div>
+      </div>
+
+   
+
+
+
+      <div style="height:12px"></div>
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label>Nombre completo del Padre:</label>
+          <input type="text" name="campo64" value="<?= datos.campo64 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Rut (Padre):</label>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <input type="text" class="rut" placeholder="xxxxxxxx-x" name="campo65" id="campo65" value="<?= datos.campo65 || '' ?>">
+            <label style="font-size:0.92em;">
+              <input type="checkbox" id="rutProvisional65" style="margin-right:3px;">Rut Provisional
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Fecha de Nacimiento (Padre):</label>
+          <input type="date" name="campo66" value="<?= datos.campo66 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Dirección (Padre):</label>
+          <input type="text" name="campo67" id="campo67" value="<?= datos.campo67 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Comuna:</label>
+          <select name="campo68" id="campo68">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+        </div>
+        <div class="form-group">
+          <label>Teléfono (Padre):</label>
+          <input type="text" class="telefono" name="campo69" value="<?= datos.campo69 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Escolaridad:</label>
+          <select name="campo70" id="campo70">
+  <option value="">Seleccione...</option>
+  <!-- Opciones se agregan por JS -->
+</select>
+<input type="text" id="campo70_otro" name="campo70_otro" placeholder="Especifique escolaridad" style="display:none;">
+        </div>
+        <div class="form-group">
+          <label>Profesión/Ocupación (Padre):</label>
+          <input type="text" name="campo71" value="<?= datos.campo71 || '' ?>">
+        </div>
+        <div class="form-group">
+          <label>Email (Padre):</label>
+          <input type="email" name="campo72" value="<?= datos.campo72 || '' ?>">
+        </div>
+      </div>
+      <!-- Select para cargo del padre -->
+
+      <br><br><br><br>
+      <div class="botonera">
+        <button type="button" class="btn-anterior" data-prev="pagina5">Anterior</button>
+        <button type="button" class="btn-siguiente" data-next="pagina7">Siguiente</button>
+        <button type="submit">Guardar en ficha</button>
+      </div>
+    </section>
+
+    <!-- ========== Página 7: Otros Antecedentes ========== -->
+    <section class="pagina-form" id="pagina7">
+      <div class="error-message" style="display:none"></div>
+      <h3>Otros Antecedentes</h3>
+<div class="form-row">
+  <div class="form-group">
+    <label>¿Participa en clases de Religión?</label>
+    <select name="campo74" id="campo74">
+      <option value="">Seleccione...</option>
+      <option value="Sí">Sí</option>
+      <option value="No">No</option>
+      </select>
+  </div>
+  <div class="form-group">
+    <label>Tipo de Religión a la que pertenece:</label>
+    <select name="religionTipo" id="religionTipo">
+      <option value="">Seleccione...</option>
+      <option value="Católica">Católica</option>
+      <option value="Evangélica">Evangélica</option>
+      <option value="Otro">Otra</option>
+    </select>
+    <input type="text" id="campo80_otro" name="campo80_otro" placeholder="Especifique religión" style="display:none;">
+  </div>
+</div>
+<!-- ==== Subtítulo: Uso de imagen ==== -->
+<h4 style="margin-top:18px;margin-bottom:5px;">Uso de Imagen</h4>
+<div style="margin-bottom: 12px; font-size: 0.98em;">
+  El Establecimiento informa que el uso de imágenes de los estudiantes en Redes Sociales y/o actividades escolares públicas y privadas son de uso pedagógico y promocional del Establecimiento. Invitamos a firmar el consentimiento informado sobre esta medida establecida en la Escuela Pedro Aguirre Cerda de Linares.
+</div>
+<div class="form-row">
+  <div class="form-group">
+    <label>¿Autoriza el uso de imagen?</label>
+    <select name="campo81" id="campo81" >
+      <option value="">Seleccione...</option>
+      <option value="Sí" <?= datos.campo81 === "Sí" ? "selected" : "" ?>>Sí</option>
+      <option value="No" <?= datos.campo81 === "No" ? "selected" : "" ?>>No</option>
+    </select>
+  </div>
+</div>
+      <div class="botonera">
+        <button type="button" class="btn-anterior" data-prev="pagina6">Anterior</button>
+        <button type="submit">Guardar en ficha</button>
+      </div>
+    </section>
+
+
+
+
+
+<footer>
+  <br><br><br>
+  </footer>
+  </form>
+  <div id="modalError" style="display:none"></div>
+
+
+
+  <script>
+var cursos = JSON.parse(<?= JSON.stringify(cursos) ?>);
+var colegios = JSON.parse(<?= JSON.stringify(colegios) ?>);
+var comunasMaule = JSON.parse(<?= JSON.stringify(comunasMaule) ?>);
+var escolaridad = JSON.parse(<?= JSON.stringify(escolaridad) ?>);
+var parentesco = JSON.parse(<?= JSON.stringify(parentesco) ?>);
+var datos = JSON.parse(<?= JSON.stringify(datos) ?>);
+
+
+
+
+// --- Funciones auxiliares reutilizables ---
+function selectOtroHandlerFactory(inputOtro) {
+  return function() {
+    limpiarErrorGeneral();
+
+    if (this.value === "Otro") {
+      if (inputOtro) {
+        inputOtro.style.display = "";
+        inputOtro.focus();
+      }
+    } else {
+      if (inputOtro) {
+        inputOtro.style.display = "none";
+        inputOtro.value = "";
+
+        // Quitar borde rojo si tenía error
+        inputOtro.classList.remove('input-error');
+
+        // --- Quitar mensaje de error en la página si está relacionado con este campo ---
+        const pagina = inputOtro.closest('.pagina-form');
+        if (pagina) {
+          const msg = pagina.querySelector('.error-message');
+          // Si el mensaje menciona este campo "Otro", lo limpiamos
+          if (msg && msg.style.display !== 'none' && msg.textContent.includes('Otro')) {
+            msg.style.display = 'none';
+            msg.textContent = '';
+          }
+        }
+        // --- FIN quitar mensaje de error ---
+      }
+    }
+  }
+}
+
+function validarTodasLasPaginas() {
+  let hayError = false;
+  let paginaConError = null;
+  let inputConError = null;
+  let nombreCampo = null;
+  let numPaginaError = null;
+
+  // Recorrer todas las páginas
+  document.querySelectorAll('.pagina-form').forEach((pagina, idxPag) => {
+    const inputs = pagina.querySelectorAll("input, select, textarea");
+    let error = false;
+    const msg = pagina.querySelector('.error-message');
+    msg.style.display = 'none';
+    msg.textContent = '';
+
+    inputs.forEach(inp => {
+      // OMITIR SOLO LOS DESHABILITADOS, PERO NO LOS OCULTOS
+      if (inp.disabled) return;
+
+      // Validar required explícito para select de uso de imagen
+      if (inp.id === "campo81" && inp.value === "") {
+        inp.classList.add('input-error');
+        error = true;
+        if (!paginaConError) {
+          paginaConError = pagina;
+          inputConError = inp;
+          nombreCampo = '¿Autoriza el uso de imagen?';
+          numPaginaError = idxPag + 1;
+        }
+      }
+
+      // Validar RUT
+      if (inp.classList.contains('rut') && inp.value) {
+        if (!validarRut(inp.value, inp)) {
+          inp.classList.add('input-error');
+          error = true;
+          if (!paginaConError) {
+            paginaConError = pagina;
+            inputConError = inp;
+            nombreCampo = 'RUT';
+            numPaginaError = idxPag + 1;
+          }
+        }
+      }
+      // Email
+      if (inp.type === "email" && inp.value) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value)) {
+          inp.classList.add('input-error');
+          error = true;
+          if (!paginaConError) {
+            paginaConError = pagina;
+            inputConError = inp;
+            nombreCampo = 'Email';
+            numPaginaError = idxPag + 1;
+          }
+        }
+      }
+      // Date
+      if (inp.type === "date" && inp.value) {
+        if (isNaN(Date.parse(inp.value))) {
+          inp.classList.add('input-error');
+          error = true;
+          if (!paginaConError) {
+            paginaConError = pagina;
+            inputConError = inp;
+            nombreCampo = 'Fecha';
+            numPaginaError = idxPag + 1;
+          }
+        }
+      }
+      // Teléfono
+      if (inp.classList.contains('telefono') && inp.value) {
+        if (!validarTelefono(inp.value)) {
+          inp.classList.add('input-error');
+          error = true;
+          if (!paginaConError) {
+            paginaConError = pagina;
+            inputConError = inp;
+            nombreCampo = 'Teléfono';
+            numPaginaError = idxPag + 1;
+          }
+        }
+      }
+      // Campos required (puedes ajustar para tus inputs)
+      if (
+        (inp.required || inp.getAttribute('required') !== null) &&
+        !inp.value &&
+        inp.type !== 'checkbox' &&
+        inp.type !== 'radio'
+      ) {
+        inp.classList.add('input-error');
+        error = true;
+        if (!paginaConError) {
+          paginaConError = pagina;
+          inputConError = inp;
+          nombreCampo = inp.name || inp.id || 'Campo requerido';
+          numPaginaError = idxPag + 1;
+        }
+      }
+    });
+
+    if (error) {
+      msg.textContent = "Hay campos incorrectos en esta página. Corrige los campos marcados en rojo.";
+      msg.style.display = '';
+      hayError = true;
+    }
+  });
+
+  // Si hay error en una página que no está activa, mostrar globalmente y saltar a esa página
+  if (paginaConError && !paginaConError.classList.contains('active')) {
+    // Cambia a la página con error
+    document.querySelectorAll('.pagina-form').forEach(pag => pag.classList.remove('active'));
+    paginaConError.classList.add('active');
+
+    // Mensaje global
+    const errorDiv = document.getElementById('errorGeneral');
+    if (errorDiv) {
+      errorDiv.innerHTML = `Hay un error en el campo <b>${nombreCampo}</b> en la página ${numPaginaError}.<br>Por favor corrígelo para poder guardar.`;
+      errorDiv.style.display = '';
+      errorDiv.scrollIntoView({behavior: "smooth"});
+    }
+    // Scroll y foco al input
+    if (inputConError && inputConError.scrollIntoView) {
+      setTimeout(function() {
+        inputConError.scrollIntoView({behavior:"smooth",block:"center"});
+        inputConError.focus();
+      }, 300);
+    }
+    // También marcar el error en la página específica (opcional)
+    const msg = paginaConError.querySelector('.error-message');
+    if (msg) {
+      msg.textContent = "Hay campos incorrectos en esta página. Corrige los campos marcados en rojo.";
+      msg.style.display = '';
+    }
+  } else if (!hayError) {
+    // Limpia el error global si todo OK
+    const errorDiv = document.getElementById('errorGeneral');
+    if (errorDiv) {
+      errorDiv.innerHTML = '';
+      errorDiv.style.display = 'none';
+    }
+  }
+
+  return hayError;
+}
+function limpiarErrorGeneral() {
+  var errorDiv = document.getElementById('errorGeneral');
+  if (errorDiv) {
+    errorDiv.innerHTML = '';
+    errorDiv.style.display = 'none';
+  }
+}
+
+function colegioOtroHandler() {
+  var inputColegioOtro = document.getElementById('campo15_otro');
+  if (this.value === "Otro") {
+    if (inputColegioOtro) inputColegioOtro.style.display = "";
+  } else {
+    if (inputColegioOtro) {
+      inputColegioOtro.style.display = "none";
+      
+    }
+  }
+}
+
+function mostrarOcultarNEE() {
+  var campo17 = document.getElementById('campo17');
+  var neeRow = document.getElementById('neeCheckboxesRow');
+  if (!campo17 || !neeRow) return;
+  if (campo17.value === "Sí") {
+    neeRow.style.display = '';
+  } else {
+    neeRow.style.display = 'none';
+    neeRow.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+  }
+}
+function calcularEdad(fechaNacimiento) {
+  if (!fechaNacimiento) return "";
+  let fn, yyyy, mm, dd;
+  // Si el input es del tipo YYYY-MM-DD, lo parseamos manualmente
+  if (/^\d{4}-\d{2}-\d{2}$/.test(fechaNacimiento)) {
+    [yyyy, mm, dd] = fechaNacimiento.split('-').map(Number);
+    fn = new Date(yyyy, mm - 1, dd);
+  } else {
+    fn = new Date(fechaNacimiento);
+  }
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - fn.getFullYear();
+  const m = hoy.getMonth() - fn.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < fn.getDate())) {
+    edad--;
+  }
+  return edad >= 0 ? edad : "";
+}
+
+function inicializarFormulario(datos) {
+  // --- CURSO (campo1) ---
+  var selectCurso = document.getElementById('campo1');
+  if (selectCurso) {
+    selectCurso.innerHTML = '<option value="">Seleccione...</option>';
+    cursos.forEach(function(item) {
+      var opt = document.createElement('option');
+      opt.value = item;
+      opt.textContent = item;
+      selectCurso.appendChild(opt);
+    });
+    selectCurso.value = datos.campo1 || '';
+  }
+
+  // --- COLEGIO DE PROCEDENCIA (campo15) ---
+  var selectColegio = document.getElementById('campo15');
+  var inputColegioOtro = document.getElementById('campo15_otro');
+  if (selectColegio) {
+    selectColegio.innerHTML = '<option value="">Seleccione...</option>';
+    colegios.forEach(function(item) {
+      var opt = document.createElement('option');
+      opt.value = item;
+      opt.textContent = item;
+      selectColegio.appendChild(opt);
+    });
+    if (datos.campo15 && colegios.includes(datos.campo15)) {
+      selectColegio.value = datos.campo15;
+      if (inputColegioOtro) inputColegioOtro.style.display = "none";
+    } else if (datos.campo15 && datos.campo15 !== "") {
+      selectColegio.value = "Otro";
+      if (inputColegioOtro) {
+        inputColegioOtro.style.display = "";
+        inputColegioOtro.value = datos.campo15;
+      }
+    } else {
+      selectColegio.value = '';
+      if (inputColegioOtro) {
+        inputColegioOtro.style.display = "none";
+        inputColegioOtro.value = '';
+      }
+    }
+    selectColegio.onchange = colegioOtroHandler;
+  }
+
+  // --- ANTECEDENTES DE SALUD: CAMPOS 25, 26, 27 ---
+  [
+    {combo: "campo25_combo", texto: "campo25_texto", dato: "campo25"},
+    {combo: "campo26_combo", texto: "campo26_texto", dato: "campo26"},
+    {combo: "campo27_combo", texto: "campo27_texto", dato: "campo27"}
+  ].forEach(function(cfg){
+    var combo = document.getElementById(cfg.combo);
+    var texto = document.getElementById(cfg.texto);
+    // Inicialización desde datos
+    if(combo && texto) {
+      if (datos[cfg.dato] && datos[cfg.dato] !== "No" && datos[cfg.dato] !== "") {
+        combo.value = "Sí";
+        texto.style.display = "";
+        texto.value = datos[cfg.dato];
+      } else if (datos[cfg.dato] === "No") {
+        combo.value = "No";
+        texto.style.display = "none";
+        texto.value = "";
+      } else {
+        combo.value = "";
+        texto.style.display = "none";
+        texto.value = "";
+      }
+      combo.onchange = function() {
+        if(this.value === "Sí") {
+          texto.style.display = "";
+        } else {
+          texto.style.display = "none";
+          texto.value = "";
+        }
+      };
+    }
+  });
+
+  // --- COMUNAS ---
+  ["campo11","campo34","campo47","campo59","campo68"].forEach(function(campo) {
+    var select = document.getElementById(campo);
+    var inputOtro = document.getElementById(campo+"_otro");
+    if (select) {
+      select.innerHTML = '<option value="">Seleccione...</option>';
+      comunasMaule.forEach(function(item) {
+        var opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        select.appendChild(opt);
+      });
+      if (datos[campo] && comunasMaule.includes(datos[campo])) {
+        select.value = datos[campo];
+        if (inputOtro) inputOtro.style.display = "none";
+      } else if (datos[campo] && datos[campo] !== "") {
+        select.value = "Otro";
+        if (inputOtro) {
+          inputOtro.style.display = "";
+          inputOtro.value = datos[campo];
+        }
+      } else {
+        select.value = '';
+        if (inputOtro) {
+          inputOtro.style.display = "none";
+          inputOtro.value = '';
+        }
+      }
+      select.onchange = selectOtroHandlerFactory(inputOtro);
+    }
+  });
+
+  // --- ESCOLARIDAD ---
+  ["campo38","campo51","campo61","campo70"].forEach(function(campo) {
+    var select = document.getElementById(campo);
+    var inputOtro = document.getElementById(campo+"_otro");
+    if (select) {
+      select.innerHTML = '<option value="">Seleccione...</option>';
+      escolaridad.forEach(function(item) {
+        var opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        select.appendChild(opt);
+      });
+      if (datos[campo] && escolaridad.includes(datos[campo])) {
+        select.value = datos[campo];
+        if (inputOtro) inputOtro.style.display = "none";
+      } else if (datos[campo] && datos[campo] !== "") {
+        select.value = "Otro";
+        if (inputOtro) {
+          inputOtro.style.display = "";
+          inputOtro.value = datos[campo];
+        }
+      } else {
+        select.value = '';
+        if (inputOtro) {
+          inputOtro.style.display = "none";
+          inputOtro.value = '';
+        }
+      }
+      select.onchange = selectOtroHandlerFactory(inputOtro);
+    }
+  });
+
+  // --- USO DE IMAGEN (campo81) ---
+var selectUsoImagen = document.getElementById('campo81');
+if (selectUsoImagen) {
+  selectUsoImagen.value = datos.campo81 || '';
+}
+
+  //parentesco
+  // === INICIALIZACIÓN DE los combos de parentesco (deja este bloque al inicio) ===
+  ["campo39","campo52"].forEach(function(campo) {
+    var select = document.getElementById(campo);
+    var inputOtro = document.getElementById(campo+"_otro");
+    if (select) {
+      select.innerHTML = '<option value="">Seleccione...</option>';
+      parentesco.forEach(function(item) {
+        var opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        select.appendChild(opt);
+      });
+      if (datos[campo] && parentesco.includes(datos[campo])) {
+        select.value = datos[campo];
+        if (inputOtro) inputOtro.style.display = "none";
+      } else if (datos[campo] && datos[campo] !== "") {
+        select.value = "Otro";
+        if (inputOtro) {
+          inputOtro.style.display = "";
+          inputOtro.value = datos[campo];
+        }
+      } else {
+        select.value = '';
+        if (inputOtro) {
+          inputOtro.style.display = "none";
+          inputOtro.value = '';
+        }
+      }
+      select.onchange = selectOtroHandlerFactory(inputOtro);
+    }
+  });
+
+  // =============================
+  // Sincronizar cargos madre/padre según parentesco
+  // =============================
+  function sincronizarCargosPorParentesco() {
+    // Madre
+    var selectParentescoTitular = document.getElementById('campo39');
+    var selectParentescoSuplente = document.getElementById('campo52');
+    var selectCargoMadre = document.getElementById('cargoMadre');
+    var selectCargoPadre = document.getElementById('cargoPadre');
+
+    if (selectCargoMadre) {
+      if (selectParentescoTitular && selectParentescoTitular.value === "Madre") {
+        selectCargoMadre.value = "titular";
+      } else if (selectParentescoSuplente && selectParentescoSuplente.value === "Madre") {
+        selectCargoMadre.value = "suplente";
+      } else {
+        selectCargoMadre.value = "";
+      }
+    }
+    if (selectCargoPadre) {
+      if (selectParentescoTitular && selectParentescoTitular.value === "Padre") {
+        selectCargoPadre.value = "titular";
+      } else if (selectParentescoSuplente && selectParentescoSuplente.value === "Padre") {
+        selectCargoPadre.value = "suplente";
+      } else {
+        selectCargoPadre.value = "";
+      }
+    }
+  }
+  // Llamar a la función después de inicializar los combos de parentesco
+  sincronizarCargosPorParentesco();
+
+  // --- MARCAR CHECKBOX RUT PROVISIONAL SI RUT ES DE 9 DÍGITOS + GUION + VERIFICADOR ---
+  [
+    { campo: "campo7",   chk: "rutProvisional7" },    // Estudiante
+    { campo: "campo32",  chk: "rutProvisional32" },   // Titular
+    { campo: "campo45",  chk: "rutProvisional45" },   // Suplente
+    { campo: "campo56",  chk: "rutProvisional56" },   // Madre
+    { campo: "campo65",  chk: "rutProvisional65" }    // Padre
+  ].forEach(function(cfg) {
+    var inp = document.getElementById(cfg.campo);
+    var chk = document.getElementById(cfg.chk);
+    if (inp && chk) {
+      if (/^\d{9}-[0-9Kk]$/.test(inp.value.trim())) {
+        chk.checked = true;
+      } else {
+        chk.checked = false;
+      }
+    }
+  });
+
+  // --- NECESIDADES EDUCATIVAS ESPECIALES (N.E.E.) ---
+  var campo17 = document.getElementById('campo17');
+  var neeRow = document.getElementById('neeCheckboxesRow');
+  if (campo17) {
+    campo17.value = datos.campo17 || '';
+    campo17.onchange = function() {
+      if (campo17.value === "Sí") {
+        neeRow.style.display = '';
+      } else {
+        neeRow.style.display = 'none';
+        neeRow.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+      }
+    };
+    if (campo17.value === "Sí") {
+      neeRow.style.display = '';
+      ["campo19","campo20","campo21","campo22","campo23"].forEach(function(campo) {
+        var cb = document.querySelector('input[name="'+campo+'"]');
+        if (cb) cb.checked = (datos[campo] && datos[campo].includes('X'));
+      });
+    } else {
+      neeRow.style.display = 'none';
+      if (neeRow) neeRow.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    }
+  }
+
+ // --- REPITENTE COMBO + CHECKBOXES ---
+var repitenteCombo = document.getElementById('repitenteCombo');
+var repitenteCheckboxes = document.querySelectorAll('#repitenteCheckboxesRow input[type="checkbox"]');
+
+// Inicialización desde datos
+(function() {
+  // Si ya hay datos previos, inicializar el combo y los checkboxes
+  if (typeof datos.campo14 === "string") {
+    if (datos.campo14.trim().toLowerCase() === "no") {
+      repitenteCombo.value = "No";
+    } else if (datos.campo14.trim().toLowerCase().startsWith("si")) {
+      repitenteCombo.value = "Sí";
+      // Buscar cursos después de "Si"
+      var cursosMarcados = datos.campo14.slice(2).split(/,|;/).map(s => s.trim()).filter(Boolean);
+      repitenteCheckboxes.forEach(cb => {
+        cb.checked = cursosMarcados.includes(cb.value);
+      });
+    } else {
+      repitenteCombo.value = "";
+    }
+  } else {
+    repitenteCombo.value = "";
+  }
+  actualizarEstadoRepitente();
+})();
+
+function actualizarEstadoRepitente() {
+  if (repitenteCombo.value === "Sí") {
+    repitenteCheckboxes.forEach(cb => cb.disabled = false);
+  } else {
+    repitenteCheckboxes.forEach(cb => {
+      cb.disabled = true;
+      cb.checked = false;
+    });
+  }
+}
+if (repitenteCombo) {
+  repitenteCombo.addEventListener('change', actualizarEstadoRepitente);
+}
+
+  // --- RELIGIÓN: ¿Participa? (campo74) ---
+  var selectParticipa = document.getElementById('campo74');
+  if (selectParticipa) {
+    selectParticipa.value = datos.campo74 || '';
+  }
+
+  // --- TIPO DE RELIGIÓN (78, 79, 80) ---
+  var selectTipoReligion = document.getElementById('religionTipo');
+  var inputReligionOtro = document.getElementById('campo80_otro');
+  if (inputReligionOtro) {
+    inputReligionOtro.addEventListener('input', function() {
+      console.log('[Religión] campo80_otro valor:', this.value);
+    });
+  }
+  if (selectTipoReligion) {
+    if (datos.campo78 && datos.campo78.trim().toUpperCase() === 'X') {
+      selectTipoReligion.value = 'Católica';
+      if (inputReligionOtro) {
+        inputReligionOtro.style.display = 'none';
+        inputReligionOtro.value = '';
+      }
+    } else if (datos.campo79 && datos.campo79.trim().toUpperCase() === 'X') {
+      selectTipoReligion.value = 'Evangélica';
+      if (inputReligionOtro) {
+        inputReligionOtro.style.display = 'none';
+        inputReligionOtro.value = '';
+      }
+    } else if (datos.campo80 && datos.campo80.trim() !== "") {
+      selectTipoReligion.value = 'Otro';
+      if (inputReligionOtro) {
+        inputReligionOtro.style.display = '';
+        inputReligionOtro.value = datos.campo80;
+      }
+    } else {
+      selectTipoReligion.value = '';
+      if (inputReligionOtro) {
+        inputReligionOtro.style.display = 'none';
+        inputReligionOtro.value = '';
+      }
+    }
+    // factory para manejar mostrar/ocultar "otro" (sin borrar el valor)
+    selectTipoReligion.onchange = function() {
+      console.log('[Religión] onchange:', this.value);
+      selectOtroHandlerFactory(inputReligionOtro).call(this);
+    };
+  }
+
+  // --- APODEDARO TITULAR: OTROS ESTUDIANTES EN LA ESCUELA (campo40) ---
+  var cursosCheckboxesTitular = document.getElementById('apoderadoTitularCursosCheckboxes');
+  if (cursosCheckboxesTitular) {
+    cursosCheckboxesTitular.innerHTML = '';
+    cursos.forEach(function(curso, idx) {
+      var label = document.createElement('label');
+      label.style.marginRight = "8px";
+      var cb = document.createElement('input');
+      cb.type = "checkbox";
+      cb.value = curso;
+      cb.name = "campo40_curso";
+      cb.id = "campo40_curso_" + idx;
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(" " + curso));
+      cursosCheckboxesTitular.appendChild(label);
+    });
+
+    // --- APODERADO SUPLENTE: OTROS ESTUDIANTES EN LA ESCUELA (campo53) ---
+    var cursosCheckboxesSuplente = document.getElementById('apoderadoSuplenteCursosCheckboxes');
+    if (cursosCheckboxesSuplente) {
+      cursosCheckboxesSuplente.innerHTML = '';
+      cursos.forEach(function(curso, idx) {
+        var label = document.createElement('label');
+        label.style.marginRight = "8px";
+        var cb = document.createElement('input');
+        cb.type = "checkbox";
+        cb.value = curso;
+        cb.name = "campo53_curso";
+        cb.id = "campo53_curso_" + idx;
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(" " + curso));
+        cursosCheckboxesSuplente.appendChild(label);
+      });
+
+      // Setear los checkboxes según datos.campo53
+      var seleccionados53 = [];
+      if (datos.campo53 && typeof datos.campo53 === "string" && datos.campo53 !== "No") {
+        seleccionados53 = datos.campo53.split(/[,;]+/).map(s => s.trim());
+      } else if (Array.isArray(datos.campo53)) {
+        seleccionados53 = datos.campo53;
+      }
+      cursosCheckboxesSuplente.querySelectorAll('input[type=checkbox]').forEach(cb => {
+        cb.checked = seleccionados53.includes(cb.value);
+      });
+    }
+
+    // Setear los checkboxes según datos.campo40
+    var seleccionados = [];
+    if (datos.campo40 && typeof datos.campo40 === "string" && datos.campo40 !== "No") {
+      seleccionados = datos.campo40.split(/[,;]+/).map(s => s.trim());
+    } else if (Array.isArray(datos.campo40)) {
+      seleccionados = datos.campo40;
+    }
+    cursosCheckboxesTitular.querySelectorAll('input[type=checkbox]').forEach(cb => {
+      cb.checked = seleccionados.includes(cb.value);
+    });
+  }
+}
+function validarPaginaActual() {
+  const pagina = document.querySelector('.pagina-form.active');
+  const inputs = pagina.querySelectorAll("input, select, textarea");
+  let error = false;
+
+  // Limpiar estados previos
+  inputs.forEach(inp => inp.classList.remove('input-error'));
+  const msg = pagina.querySelector('.error-message');
+  msg.style.display = 'none';
+  msg.textContent = '';
+
+  inputs.forEach(inp => {
+    if (inp.offsetParent === null || inp.disabled) return;
+
+    // Validar email si tiene valor
+    if (inp.type === "email" && inp.value) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value)) {
+        inp.classList.add('input-error');
+        error = true;
+      }
+    }
+    // Validar date (si tiene valor)
+    if (inp.type === "date" && inp.value) {
+      if (isNaN(Date.parse(inp.value))) {
+        inp.classList.add('input-error');
+        error = true;
+      }
+    }
+    // Validar teléfono
+    if (inp.classList.contains('telefono') && inp.value) {
+      if (!validarTelefono(inp.value)) {
+        inp.classList.add('input-error');
+        error = true;
+      }
+    }
+    // Validar rut <-- CORREGIDO: pasar inp como segundo argumento
+    if (inp.classList.contains('rut') && inp.value) {
+      if (!validarRut(inp.value, inp)) {
+        inp.classList.add('input-error');
+        error = true;
+      }
+    }
+  });
+
+  if (error) {
+    msg.textContent = "Hay campos incorrectos en esta página. Corrige los campos marcados en rojo.";
+    msg.style.display = '';
+    return true;
+  }
+  // Si no hay error, ocultar mensaje
+  msg.textContent = '';
+  msg.style.display = 'none';
+  return false;
+}
+
+
+    function actualizarEstadoCargos() {
+      const cargoMadre = document.getElementById('cargoMadre');
+      const cargoPadre = document.getElementById('cargoPadre');
+
+      const valorMadre = cargoMadre.value;
+      const valorPadre = cargoPadre.value;
+
+      // Habilitar todas las opciones primero para resetear estados
+      Array.from(cargoMadre.options).forEach(option => option.disabled = false);
+      Array.from(cargoPadre.options).forEach(option => option.disabled = false);
+
+      // Si la madre es titular, deshabilitar titular para el padre
+      if (valorMadre === 'titular') {
+        const opcionTitularPadre = cargoPadre.querySelector('option[value="titular"]');
+        if (opcionTitularPadre) {
+          opcionTitularPadre.disabled = true;
+          if (valorPadre === 'titular') { // Si el padre ya tiene el mismo cargo, revertir o advertir
+            alert('El cargo de Apoderado Titular ya está ocupado por la madre. Por favor, seleccione otro cargo para el padre.');
+            cargoPadre.value = ''; // O el valor que desees por defecto si el cargo está ocupado
+          }
+        }
+      }
+      // Si la madre es suplente, deshabilitar suplente para el padre
+      else if (valorMadre === 'suplente') {
+        const opcionSuplentePadre = cargoPadre.querySelector('option[value="suplente"]');
+        if (opcionSuplentePadre) {
+          opcionSuplentePadre.disabled = true;
+          if (valorPadre === 'suplente') { // Si el padre ya tiene el mismo cargo, revertir o advertir
+            alert('El cargo de Apoderado Suplente ya está ocupado por la madre. Por favor, seleccione otro cargo para el padre.');
+            cargoPadre.value = '';
+          }
+        }
+      }
+
+      // Si el padre es titular, deshabilitar titular para la madre
+      if (valorPadre === 'titular') {
+        const opcionTitularMadre = cargoMadre.querySelector('option[value="titular"]');
+        if (opcionTitularMadre) {
+          opcionTitularMadre.disabled = true;
+          if (valorMadre === 'titular') { // Si la madre ya tiene el mismo cargo, revertir o advertir
+            alert('El cargo de Apoderado Titular ya está ocupado por el padre. Por favor, seleccione otro cargo para la madre.');
+            cargoMadre.value = '';
+          }
+        }
+      }
+      // Si el padre es suplente, deshabilitar suplente para la madre
+      else if (valorPadre === 'suplente') {
+        const opcionSuplenteMadre = cargoMadre.querySelector('option[value="suplente"]');
+        if (opcionSuplenteMadre) {
+          opcionSuplenteMadre.disabled = true;
+          if (valorMadre === 'suplente') { // Si la madre ya tiene el mismo cargo, revertir o advertir
+            alert('El cargo de Apoderado Suplente ya está ocupado por el padre. Por favor, seleccione otro cargo para la madre.');
+            cargoMadre.value = '';
+          }
+        }
+      }
+    }
+// --- INICIALIZACIÓN AL CARGAR Y BOTÓN LIMPIAR FORMULARIO ---
+window.addEventListener('DOMContentLoaded', function() {
+  inicializarFormulario(datos);
+
+const cargoMadre = document.getElementById('cargoMadre');
+      const cargoPadre = document.getElementById('cargoPadre');
+
+      if (cargoMadre && cargoPadre) {
+        cargoMadre.addEventListener('change', actualizarEstadoCargos);
+        cargoPadre.addEventListener('change', actualizarEstadoCargos);
+      }
+actualizarEstadoCargos();
+  // --- VALIDACIÓN VISUAL EN TIEMPO REAL ---
+// Esto se pone dentro del window.addEventListener('DOMContentLoaded', ...)
+document.querySelectorAll('.pagina-form input, .pagina-form select, .pagina-form textarea').forEach(function(inp){
+  inp.addEventListener('input', validarPaginaActual);
+  inp.addEventListener('change', validarPaginaActual);
+  inp.addEventListener('blur', validarPaginaActual);
+});
+
+  var inputNacimiento = document.querySelector('input[name="campo8"]');
+  var inputEdad = document.querySelector('input[name="campo9"]');
+  if (inputNacimiento && inputEdad) {
+    inputNacimiento.addEventListener('input', function() {
+      inputEdad.value = calcularEdad(this.value);
+    });
+    // Si ya hay fecha cargada al abrir, muestra la edad:
+    if (inputNacimiento.value) {
+      inputEdad.value = calcularEdad(inputNacimiento.value);
+    }
+  }
+//***********************************************************************************************************************************
+//********************************************************************************************************************************
+//******************************************************************************************************************************
+
+//Inicio sincronizacion
+(function() {
+  // === 1. Referencias a campos ===
+
+  const campoNombreCompletoMadre = document.querySelector('input[name="campo55"]');
+  const campoNombreCompletoPadre = document.querySelector('input[name="campo64"]');
+  const campoNombresTitular   = document.querySelector('input[name="campo31"]');
+  const campoApPatTitular     = document.querySelector('input[name="campo29"]');
+  const campoApMatTitular     = document.querySelector('input[name="campo30"]');
+  const campoNombresSuplente  = document.querySelector('input[name="campo44"]');
+  const campoApPatSuplente    = document.querySelector('input[name="campo42"]');
+  const campoApMatSuplente    = document.querySelector('input[name="campo43"]');
+  const campoDirAlumno   = document.getElementById('campo10');
+  const campoDirTitular  = document.getElementById('campo33');
+  const campoDirSuplente = document.getElementById('campo46');
+  const campoDirMadre    = document.getElementById('campo58');
+  const campoDirPadre    = document.getElementById('campo67');
+  const campoComAlumno   = document.getElementById('campo11');
+  const campoComTitular  = document.getElementById('campo34');
+  const campoComSuplente = document.getElementById('campo47');
+  const campoComMadre    = document.getElementById('campo59');
+  const campoComPadre    = document.getElementById('campo68');
+  const campoTelTitular    = document.querySelector('input[name="campo35"]');
+  const campoTelSuplente   = document.querySelector('input[name="campo48"]');
+  const campoTelMadre      = document.querySelector('input[name="campo60"]');
+  const campoTelPadre      = document.querySelector('input[name="campo69"]');
+  const campoEmailTitular  = document.querySelector('input[name="campo36"]');
+  const campoEmailSuplente = document.querySelector('input[name="campo49"]');
+  const campoEmailMadre    = document.querySelector('input[name="campo63"]');
+  const campoEmailPadre    = document.querySelector('input[name="campo72"]');
+  const campoEscTitular    = document.getElementById('campo38');
+  const campoEscSuplente   = document.getElementById('campo51');
+  const campoEscMadre      = document.getElementById('campo61');
+  const campoEscPadre      = document.getElementById('campo70');
+  const campoProfTitular   = document.querySelector('input[name="campo37"]');
+  const campoProfSuplente  = document.querySelector('input[name="campo50"]');
+  const campoProfMadre     = document.querySelector('input[name="campo62"]');
+  const campoProfPadre     = document.querySelector('input[name="campo71"]');
+  const campoFechaMadre    = document.querySelector('input[name="campo57"]');
+  const campoFechaPadre    = document.querySelector('input[name="campo66"]');
+  const campoRutTitular    = document.querySelector('input[name="campo32"]');
+  const campoRutSuplente   = document.querySelector('input[name="campo45"]');
+  const campoRutMadre      = document.querySelector('input[name="campo56"]');
+  const campoRutPadre      = document.querySelector('input[name="campo65"]');
+
+  // === 2. Selects clave ===
+  const selectViveCon = document.getElementById('campo12_combo');
+  const selectParentescoTitular = document.getElementById('campo39');
+  const selectParentescoSuplente = document.getElementById('campo52');
+  const selectCargoMadre = document.getElementById('cargoMadre');
+  const selectCargoPadre = document.getElementById('cargoPadre');
+
+  // === Control para evitar sobreescritura accidental del valor anterior ===
+  let modalAbierto = false;
+
+  // === MODAL solo para copia inicial de profesión/escolaridad (múltiple), con botón cancelar, autocierre por visibilidad, y cierre al click fuera ===
+  function mostrarModalSincronizacion(campos, callback, cancelCallback, selectRef, valorAnterior) {
+    console.log("[MODAL] Se abre modal de sincronización", {selectRef, valorAnterior});
+    modalAbierto = true;
+    let html = `<form id="modalSincronizaForm"><h3>Confirma qué datos conservar</h3>`;
+    campos.forEach((c, i) => {
+      html += `
+        <div style="margin-bottom:16px;">
+          <strong>${c.label}</strong><br>
+          <label>
+            <input type="radio" name="campo${i}" value="apoderado" checked>
+            Mantener Apoderado: <span style="color:#1976d2">${c.valorApoderado || '<i>Vacío</i>'}</span>
+          </label><br>
+          <label>
+            <input type="radio" name="campo${i}" value="familiar">
+            Mantener Familiar: <span style="color:#e53935">${c.valorFamiliar || '<i>Vacío</i>'}</span>
+          </label>
+        </div>
+      `;
+    });
+    html += `<div style="text-align:center;margin-top:18px;">
+      <button type="submit" style="margin-right:24px;">Aceptar</button>
+      <button type="button" id="btnCancelarCopiaInicial" style="background:#e53935;color:#fff;border:none;padding:8px 18px;border-radius:4px;font-size:1em;font-weight:bold;cursor:pointer;">Cancelar</button>
+    </div></form>`;
+
+    let modal = document.createElement('div');
+    modal.style = "position:fixed;z-index:99999;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.32);display:flex;align-items:center;justify-content:center";
+    let inner = document.createElement('div');
+    inner.style = "background:#fff;padding:32px 28px 22px 28px;border-radius:10px;box-shadow:0 2px 12px #3334;";
+    inner.innerHTML = html;
+    modal.appendChild(inner);
+    document.body.appendChild(modal);
+
+    function cerrarYCancelar(origen) {
+      console.log("[MODAL] cerrarYCancelar", {origen, selectRef, valorAnterior});
+      modalAbierto = false;
+      if (modal.parentNode) document.body.removeChild(modal);
+      if (cancelCallback) cancelCallback();
+      document.removeEventListener('visibilitychange', visHandler, true);
+      document.removeEventListener('mousedown', outsideClickHandler, true);
+      document.removeEventListener('touchstart', outsideClickHandler, true);
+      console.log("[MODAL] Modal cerrado por", origen);
+    }
+    inner.querySelector('#btnCancelarCopiaInicial').onclick = function() { cerrarYCancelar('cancelar-boton'); };
+
+    function outsideClickHandler(e) {
+      if (!inner.contains(e.target)) {
+        cerrarYCancelar('click-fuera');
+      }
+    }
+    setTimeout(() => {
+      document.addEventListener('mousedown', outsideClickHandler, true);
+      document.addEventListener('touchstart', outsideClickHandler, true);
+    }, 0);
+
+    let hidden = false;
+    function visHandler() {
+      if (document.visibilityState === 'hidden') {
+        hidden = true;
+        console.log("[MODAL] visibilitychange: hidden");
+      } else if (document.visibilityState === 'visible' && hidden) {
+        hidden = false;
+        console.log("[MODAL] visibilitychange: visible (cerrar modal y restaurar select)");
+        modalAbierto = false;
+        if (modal.parentNode) document.body.removeChild(modal);
+        if (selectRef && typeof valorAnterior !== "undefined") {
+          cancelarYRestaurarSelect(selectRef, valorAnterior, 'visHandler');
+        }
+        document.removeEventListener('visibilitychange', visHandler, true);
+        document.removeEventListener('mousedown', outsideClickHandler, true);
+        document.removeEventListener('touchstart', outsideClickHandler, true);
+      }
+    }
+    document.addEventListener('visibilitychange', visHandler, true);
+
+    inner.querySelector('form').onsubmit = function(e) {
+      e.preventDefault();
+      let elecciones = campos.map((c, i) => inner.querySelector(`[name="campo${i}"]:checked`).value);
+      if (modal.parentNode) document.body.removeChild(modal);
+      modalAbierto = false;
+      document.removeEventListener('visibilitychange', visHandler, true);
+      document.removeEventListener('mousedown', outsideClickHandler, true);
+      document.removeEventListener('touchstart', outsideClickHandler, true);
+      console.log("[MODAL] Modal cerrado por submit");
+      callback(elecciones);
+    }
+  }
+
+  // === Estado de vinculación para copia inicial ===
+  let yaVinculados = {
+    profTitularMadre: false,
+    escTitularMadre: false,
+    profTitularPadre: false,
+    escTitularPadre: false,
+    profSuplenteMadre: false,
+    escSuplenteMadre: false,
+    profSuplentePadre: false,
+    escSuplentePadre: false
+  };
+
+  let parentescoTitularAnterior = selectParentescoTitular.value;
+  let parentescoSuplenteAnterior = selectParentescoSuplente.value;
+  let cargoMadreAnterior = selectCargoMadre.value;
+  let cargoPadreAnterior = selectCargoPadre.value;
+  let __vinculacionPorCargo = false;
+
+  selectParentescoTitular.addEventListener('mousedown', function() {
+    if (!modalAbierto) parentescoTitularAnterior = this.value;
+  });
+  selectParentescoTitular.addEventListener('focus', function() {
+    if (!modalAbierto) parentescoTitularAnterior = this.value;
+  });
+  selectParentescoSuplente.addEventListener('mousedown', function() {
+    if (!modalAbierto) parentescoSuplenteAnterior = this.value;
+  });
+  selectParentescoSuplente.addEventListener('focus', function() {
+    if (!modalAbierto) parentescoSuplenteAnterior = this.value;
+  });
+  selectCargoMadre.addEventListener('mousedown', function() {
+    if (!modalAbierto) cargoMadreAnterior = this.value;
+  });
+  selectCargoMadre.addEventListener('focus', function() {
+    if (!modalAbierto) cargoMadreAnterior = this.value;
+  });
+  selectCargoPadre.addEventListener('mousedown', function() {
+    if (!modalAbierto) cargoPadreAnterior = this.value;
+  });
+  selectCargoPadre.addEventListener('focus', function() {
+    if (!modalAbierto) cargoPadreAnterior = this.value;
+  });
+
+  function cancelarYRestaurarSelect(select, valorAnterior, origen) {
+    setTimeout(function() {
+      console.log("[MODAL] cancelarYRestaurarSelect", {select, valorAnterior, origen});
+      select.value = valorAnterior;
+      let event = new Event('change', { bubbles: true });
+      select.dispatchEvent(event);
+    }, 0);
+  }
+
+  selectParentescoTitular.addEventListener('change', function() {
+    __vinculacionPorCargo = false;
+    if (
+      (this.value === "Padre" && selectParentescoSuplente.value === "Padre") ||
+      (this.value === "Madre" && selectParentescoSuplente.value === "Madre")
+    ) {
+      this.value = parentescoTitularAnterior;
+      alert("La opción que intenta elegir ya está ocupada por el otro apoderado.");
+      return;
+    }
+    Object.keys(yaVinculados).forEach(k => yaVinculados[k] = false);
+    console.log("[SYNC] Llama a sincronizarCampos (titular change)", {permitirCancelar:true, select:this, valorAnterior:parentescoTitularAnterior});
+    sincronizarCampos(true, () => cancelarYRestaurarSelect(selectParentescoTitular, parentescoTitularAnterior, 'parTitularChange'), selectParentescoTitular, parentescoTitularAnterior);
+    sincronizarCargoConParentesco('titular', this.value);
+  });
+  selectParentescoSuplente.addEventListener('change', function() {
+    __vinculacionPorCargo = false;
+    if (
+      (this.value === "Padre" && selectParentescoTitular.value === "Padre") ||
+      (this.value === "Madre" && selectParentescoTitular.value === "Madre")
+    ) {
+      this.value = parentescoSuplenteAnterior;
+      alert("La opción que intenta elegir ya está ocupada por el otro apoderado.");
+      return;
+    }
+    Object.keys(yaVinculados).forEach(k => yaVinculados[k] = false);
+    console.log("[SYNC] Llama a sincronizarCampos (suplente change)", {permitirCancelar:true, select:this, valorAnterior:parentescoSuplenteAnterior});
+    sincronizarCampos(true, () => cancelarYRestaurarSelect(selectParentescoSuplente, parentescoSuplenteAnterior, 'parSuplenteChange'), selectParentescoSuplente, parentescoSuplenteAnterior);
+    sincronizarCargoConParentesco('suplente', this.value);
+  });
+  selectCargoMadre.addEventListener('change', function() {
+    __vinculacionPorCargo = true;
+    if (this.value !== "" && this.value === selectCargoPadre.value) {
+      this.value = cargoMadreAnterior;
+      alert("El cargo ya está ocupado por el padre.");
+      return;
+    }
+    Object.keys(yaVinculados).forEach(k => yaVinculados[k] = false);
+    console.log("[SYNC] Llama a sincronizarCampos (cargo madre change)", {permitirCancelar:true, select:this, valorAnterior:cargoMadreAnterior});
+    sincronizarCampos(true, () => cancelarYRestaurarSelect(selectCargoMadre, cargoMadreAnterior, 'cargoMadreChange'), selectCargoMadre, cargoMadreAnterior);
+    sincronizarParentescoConCargo('madre', this.value);
+  });
+  selectCargoPadre.addEventListener('change', function() {
+    __vinculacionPorCargo = true;
+    if (this.value !== "" && this.value === selectCargoMadre.value) {
+      this.value = cargoPadreAnterior;
+      alert("El cargo ya está ocupado por la madre.");
+      return;
+    }
+    Object.keys(yaVinculados).forEach(k => yaVinculados[k] = false);
+    console.log("[SYNC] Llama a sincronizarCampos (cargo padre change)", {permitirCancelar:true, select:this, valorAnterior:cargoPadreAnterior});
+    sincronizarCampos(true, () => cancelarYRestaurarSelect(selectCargoPadre, cargoPadreAnterior, 'cargoPadreChange'), selectCargoPadre, cargoPadreAnterior);
+    sincronizarParentescoConCargo('padre', this.value);
+  });
+
+  // === 3. Estado listeners para limpiar ===
+  let syncListeners = [];
+
+  // === 4. Lógica central ===
+  function sincronizarCampos(permitirCancelar, cancelarCallback, selectRef, valorAnterior) {
+    syncListeners.forEach(({el, type, handler}) => el.removeEventListener(type, handler));
+    syncListeners = [];
+
+    // Detectar parentesco/cargo
+    const titularEsPadre = selectParentescoTitular.value === "Padre";
+    const titularEsMadre = selectParentescoTitular.value === "Madre";
+    const suplenteEsPadre = selectParentescoSuplente.value === "Padre";
+    const suplenteEsMadre = selectParentescoSuplente.value === "Madre";
+
+    // ==== COPIA INICIAL SOLO PROFESIÓN / ESCOLARIDAD (en una sola ventana modal si hay conflictos) ====
+    let conflictos = [];
+    if (titularEsMadre && campoProfTitular && campoProfMadre && !yaVinculados.profTitularMadre && campoProfTitular.value && campoProfMadre.value && campoProfTitular.value !== campoProfMadre.value)
+      conflictos.push({campoApoderado: campoProfTitular, campoFamiliar: campoProfMadre, label: "Profesión (Titular-Madre)", key: "profTitularMadre", valorApoderado: campoProfTitular.value, valorFamiliar: campoProfMadre.value});
+    if (titularEsMadre && campoEscTitular && campoEscMadre && !yaVinculados.escTitularMadre && campoEscTitular.value && campoEscMadre.value && campoEscTitular.value !== campoEscMadre.value)
+      conflictos.push({campoApoderado: campoEscTitular, campoFamiliar: campoEscMadre, label: "Escolaridad (Titular-Madre)", key: "escTitularMadre", valorApoderado: campoEscTitular.value, valorFamiliar: campoEscMadre.value});
+    if (titularEsPadre && campoProfTitular && campoProfPadre && !yaVinculados.profTitularPadre && campoProfTitular.value && campoProfPadre.value && campoProfTitular.value !== campoProfPadre.value)
+      conflictos.push({campoApoderado: campoProfTitular, campoFamiliar: campoProfPadre, label: "Profesión (Titular-Padre)", key: "profTitularPadre", valorApoderado: campoProfTitular.value, valorFamiliar: campoProfPadre.value});
+    if (titularEsPadre && campoEscTitular && campoEscPadre && !yaVinculados.escTitularPadre && campoEscTitular.value && campoEscPadre.value && campoEscTitular.value !== campoEscPadre.value)
+      conflictos.push({campoApoderado: campoEscTitular, campoFamiliar: campoEscPadre, label: "Escolaridad (Titular-Padre)", key: "escTitularPadre", valorApoderado: campoEscTitular.value, valorFamiliar: campoEscPadre.value});
+    if (suplenteEsMadre && campoProfSuplente && campoProfMadre && !yaVinculados.profSuplenteMadre && campoProfSuplente.value && campoProfMadre.value && campoProfSuplente.value !== campoProfMadre.value)
+      conflictos.push({campoApoderado: campoProfSuplente, campoFamiliar: campoProfMadre, label: "Profesión (Suplente-Madre)", key: "profSuplenteMadre", valorApoderado: campoProfSuplente.value, valorFamiliar: campoProfMadre.value});
+    if (suplenteEsMadre && campoEscSuplente && campoEscMadre && !yaVinculados.escSuplenteMadre && campoEscSuplente.value && campoEscMadre.value && campoEscSuplente.value !== campoEscMadre.value)
+      conflictos.push({campoApoderado: campoEscSuplente, campoFamiliar: campoEscMadre, label: "Escolaridad (Suplente-Madre)", key: "escSuplenteMadre", valorApoderado: campoEscSuplente.value, valorFamiliar: campoEscMadre.value});
+    if (suplenteEsPadre && campoProfSuplente && campoProfPadre && !yaVinculados.profSuplentePadre && campoProfSuplente.value && campoProfPadre.value && campoProfSuplente.value !== campoProfPadre.value)
+      conflictos.push({campoApoderado: campoProfSuplente, campoFamiliar: campoProfPadre, label: "Profesión (Suplente-Padre)", key: "profSuplentePadre", valorApoderado: campoProfSuplente.value, valorFamiliar: campoProfPadre.value});
+    if (suplenteEsPadre && campoEscSuplente && campoEscPadre && !yaVinculados.escSuplentePadre && campoEscSuplente.value && campoEscPadre.value && campoEscSuplente.value !== campoEscPadre.value)
+      conflictos.push({campoApoderado: campoEscSuplente, campoFamiliar: campoEscPadre, label: "Escolaridad (Suplente-Padre)", key: "escSuplentePadre", valorApoderado: campoEscSuplente.value, valorFamiliar: campoEscPadre.value});
+
+    // Si hay conflictos, mostrar un solo modal para todos, y permitir cancelar
+    if (conflictos.length > 0) {
+      mostrarModalSincronizacion(conflictos, function(elecciones) {
+        conflictos.forEach((c, idx) => {
+          if (elecciones[idx] === 'apoderado') c.campoFamiliar.value = c.campoApoderado.value;
+          else c.campoApoderado.value = c.campoFamiliar.value;
+          yaVinculados[c.key] = true;
+        });
+        sincronizarCampos();
+      }, function() {
+        if (permitirCancelar && cancelarCallback) cancelarCallback();
+      }, selectRef, valorAnterior);
+      return;
+    }
+
+    function syncCampoVinculado(apoderado, familiar, prefer) {
+      if ((!apoderado || !apoderado.value) && (!familiar || !familiar.value)) return;
+      if (!apoderado.value && familiar.value) apoderado.value = familiar.value;
+      if (apoderado.value && !familiar.value) familiar.value = apoderado.value;
+      if (apoderado.value && familiar.value) {
+        if (__vinculacionPorCargo) apoderado.value = familiar.value;
+        else familiar.value = apoderado.value;
+      }
+    }
+
+        // === SINCRONIZACIÓN BIDIRECCIONAL: NOMBRE COMPLETO Y NOMBRES/APELLIDOS CON PRIORIZACIÓN ===
+
+    // Helper para copiar apoderado <-> familiar según prioridad
+    function syncNombreCompletoBidireccional(nombres, apPat, apMat, nombreCompleto,
+        esParentesco, esTitular, esMadre, esPadre, esSuplente) {
+      // Determinar si estamos en modo "cargo" (priorizar familiar) o "parentesco" (priorizar apoderado)
+      let preferApoderado = !__vinculacionPorCargo;
+
+      // 1. Si uno vacío y otro no, copiar hacia el vacío
+      const nombresApoderado = nombres?.value || "";
+      const apPatApoderado = apPat?.value || "";
+      const apMatApoderado = apMat?.value || "";
+      const apoderadoVacio = !(nombresApoderado + apPatApoderado + apMatApoderado).trim();
+      const familiarVacio = !(nombreCompleto?.value || "").trim();
+
+      if (apoderadoVacio && !familiarVacio) {
+        // Copiar de familiar a apoderado
+        const partes = nombreCompleto.value.trim().split(/\s+/);
+        if (partes.length >= 3) {
+          nombres.value = partes.slice(0, -2).join(" ");
+          apPat.value = partes.slice(-2, -1)[0];
+          apMat.value = partes.slice(-1)[0];
+        } else if (partes.length === 2) {
+          nombres.value = partes[0];
+          apPat.value = partes[1];
+          apMat.value = "";
+        } else if (partes.length === 1) {
+          nombres.value = partes[0];
+          apPat.value = "";
+          apMat.value = "";
+        }
+      } else if (!apoderadoVacio && familiarVacio) {
+        // Copiar de apoderado a familiar
+        nombreCompleto.value = [nombres.value, apPat.value, apMat.value].filter(Boolean).join(" ").trim();
+      } else if (!apoderadoVacio && !familiarVacio) {
+        // Ambos con datos, prioridad según preferApoderado
+        if (preferApoderado) {
+          nombreCompleto.value = [nombres.value, apPat.value, apMat.value].filter(Boolean).join(" ").trim();
+        } else {
+          // Priorizar familiar (madre/padre)
+          const partes = nombreCompleto.value.trim().split(/\s+/);
+          if (partes.length >= 3) {
+            nombres.value = partes.slice(0, -2).join(" ");
+            apPat.value = partes.slice(-2, -1)[0];
+            apMat.value = partes.slice(-1)[0];
+          } else if (partes.length === 2) {
+            nombres.value = partes[0];
+            apPat.value = partes[1];
+            apMat.value = "";
+          } else if (partes.length === 1) {
+            nombres.value = partes[0];
+            apPat.value = "";
+            apMat.value = "";
+          }
+        }
+      }
+      // Si ambos vacíos, nada
+    }
+
+    // TITULAR <-> MADRE
+    if (campoNombreCompletoMadre && campoNombresTitular && campoApPatTitular && campoApMatTitular) {
+      if (selectParentescoTitular.value === "Madre") {
+        syncNombreCompletoBidireccional(
+          campoNombresTitular, campoApPatTitular, campoApMatTitular, campoNombreCompletoMadre,
+          !__vinculacionPorCargo, true, true, false, false
+        );
+      }
+    }
+    // TITULAR <-> PADRE
+    if (campoNombreCompletoPadre && campoNombresTitular && campoApPatTitular && campoApMatTitular) {
+      if (selectParentescoTitular.value === "Padre") {
+        syncNombreCompletoBidireccional(
+          campoNombresTitular, campoApPatTitular, campoApMatTitular, campoNombreCompletoPadre,
+          !__vinculacionPorCargo, true, false, true, false
+        );
+      }
+    }
+    // SUPLENTE <-> MADRE
+    if (campoNombreCompletoMadre && campoNombresSuplente && campoApPatSuplente && campoApMatSuplente) {
+      if (selectParentescoSuplente.value === "Madre") {
+        syncNombreCompletoBidireccional(
+          campoNombresSuplente, campoApPatSuplente, campoApMatSuplente, campoNombreCompletoMadre,
+          !__vinculacionPorCargo, false, true, false, true
+        );
+      }
+    }
+    // SUPLENTE <-> PADRE
+    if (campoNombreCompletoPadre && campoNombresSuplente && campoApPatSuplente && campoApMatSuplente) {
+      if (selectParentescoSuplente.value === "Padre") {
+        syncNombreCompletoBidireccional(
+          campoNombresSuplente, campoApPatSuplente, campoApMatSuplente, campoNombreCompletoPadre,
+          !__vinculacionPorCargo, false, false, true, true
+        );
+      }
+    }
+
+    // Bidireccionalidad en eventos de cambio (mantener para cambios por input)
+    // --- Titular <-> Madre ---
+    if (campoNombreCompletoMadre && campoNombresTitular && campoApPatTitular && campoApMatTitular) {
+      const updateNombreCompletoMadre = () => {
+        if (selectParentescoTitular.value === "Madre") {
+          campoNombreCompletoMadre.value = [campoNombresTitular.value, campoApPatTitular.value, campoApMatTitular.value].filter(Boolean).join(" ").trim();
+        }
+      };
+      const splitNombreCompletoMadre = () => {
+        if (selectParentescoTitular.value === "Madre") {
+          const partes = campoNombreCompletoMadre.value.trim().split(/\s+/);
+          if (partes.length >= 3) {
+            campoNombresTitular.value = partes.slice(0, -2).join(" ");
+            campoApPatTitular.value = partes.slice(-2, -1)[0];
+            campoApMatTitular.value = partes.slice(-1)[0];
+          } else if (partes.length === 2) {
+            campoNombresTitular.value = partes[0];
+            campoApPatTitular.value = partes[1];
+            campoApMatTitular.value = "";
+          } else if (partes.length === 1) {
+            campoNombresTitular.value = partes[0];
+            campoApPatTitular.value = "";
+            campoApMatTitular.value = "";
+          }
+        }
+      };
+      campoNombresTitular.addEventListener('input', updateNombreCompletoMadre);
+      campoApPatTitular.addEventListener('input', updateNombreCompletoMadre);
+      campoApMatTitular.addEventListener('input', updateNombreCompletoMadre);
+      campoNombreCompletoMadre.addEventListener('input', splitNombreCompletoMadre);
+      syncListeners.push({el: campoNombresTitular, type: 'input', handler: updateNombreCompletoMadre});
+      syncListeners.push({el: campoApPatTitular, type: 'input', handler: updateNombreCompletoMadre});
+      syncListeners.push({el: campoApMatTitular, type: 'input', handler: updateNombreCompletoMadre});
+      syncListeners.push({el: campoNombreCompletoMadre, type: 'input', handler: splitNombreCompletoMadre});
+    }
+    // --- Titular <-> Padre ---
+    if (campoNombreCompletoPadre && campoNombresTitular && campoApPatTitular && campoApMatTitular) {
+      const updateNombreCompletoPadre = () => {
+        if (selectParentescoTitular.value === "Padre") {
+          campoNombreCompletoPadre.value = [campoNombresTitular.value, campoApPatTitular.value, campoApMatTitular.value].filter(Boolean).join(" ").trim();
+        }
+      };
+      const splitNombreCompletoPadre = () => {
+        if (selectParentescoTitular.value === "Padre") {
+          const partes = campoNombreCompletoPadre.value.trim().split(/\s+/);
+          if (partes.length >= 3) {
+            campoNombresTitular.value = partes.slice(0, -2).join(" ");
+            campoApPatTitular.value = partes.slice(-2, -1)[0];
+            campoApMatTitular.value = partes.slice(-1)[0];
+          } else if (partes.length === 2) {
+            campoNombresTitular.value = partes[0];
+            campoApPatTitular.value = partes[1];
+            campoApMatTitular.value = "";
+          } else if (partes.length === 1) {
+            campoNombresTitular.value = partes[0];
+            campoApPatTitular.value = "";
+            campoApMatTitular.value = "";
+          }
+        }
+      };
+      campoNombresTitular.addEventListener('input', updateNombreCompletoPadre);
+      campoApPatTitular.addEventListener('input', updateNombreCompletoPadre);
+      campoApMatTitular.addEventListener('input', updateNombreCompletoPadre);
+      campoNombreCompletoPadre.addEventListener('input', splitNombreCompletoPadre);
+      syncListeners.push({el: campoNombresTitular, type: 'input', handler: updateNombreCompletoPadre});
+      syncListeners.push({el: campoApPatTitular, type: 'input', handler: updateNombreCompletoPadre});
+      syncListeners.push({el: campoApMatTitular, type: 'input', handler: updateNombreCompletoPadre});
+      syncListeners.push({el: campoNombreCompletoPadre, type: 'input', handler: splitNombreCompletoPadre});
+    }
+    // --- Suplente <-> Madre ---
+    if (campoNombreCompletoMadre && campoNombresSuplente && campoApPatSuplente && campoApMatSuplente) {
+      const updateNombreCompletoMadreS = () => {
+        if (selectParentescoSuplente.value === "Madre") {
+          campoNombreCompletoMadre.value = [campoNombresSuplente.value, campoApPatSuplente.value, campoApMatSuplente.value].filter(Boolean).join(" ").trim();
+        }
+      };
+      const splitNombreCompletoMadreS = () => {
+        if (selectParentescoSuplente.value === "Madre") {
+          const partes = campoNombreCompletoMadre.value.trim().split(/\s+/);
+          if (partes.length >= 3) {
+            campoNombresSuplente.value = partes.slice(0, -2).join(" ");
+            campoApPatSuplente.value = partes.slice(-2, -1)[0];
+            campoApMatSuplente.value = partes.slice(-1)[0];
+          } else if (partes.length === 2) {
+            campoNombresSuplente.value = partes[0];
+            campoApPatSuplente.value = partes[1];
+            campoApMatSuplente.value = "";
+          } else if (partes.length === 1) {
+            campoNombresSuplente.value = partes[0];
+            campoApPatSuplente.value = "";
+            campoApMatSuplente.value = "";
+          }
+        }
+      };
+      campoNombresSuplente.addEventListener('input', updateNombreCompletoMadreS);
+      campoApPatSuplente.addEventListener('input', updateNombreCompletoMadreS);
+      campoApMatSuplente.addEventListener('input', updateNombreCompletoMadreS);
+      campoNombreCompletoMadre.addEventListener('input', splitNombreCompletoMadreS);
+      syncListeners.push({el: campoNombresSuplente, type: 'input', handler: updateNombreCompletoMadreS});
+      syncListeners.push({el: campoApPatSuplente, type: 'input', handler: updateNombreCompletoMadreS});
+      syncListeners.push({el: campoApMatSuplente, type: 'input', handler: updateNombreCompletoMadreS});
+      syncListeners.push({el: campoNombreCompletoMadre, type: 'input', handler: splitNombreCompletoMadreS});
+    }
+    // --- Suplente <-> Padre ---
+    if (campoNombreCompletoPadre && campoNombresSuplente && campoApPatSuplente && campoApMatSuplente) {
+      const updateNombreCompletoPadreS = () => {
+        if (selectParentescoSuplente.value === "Padre") {
+          campoNombreCompletoPadre.value = [campoNombresSuplente.value, campoApPatSuplente.value, campoApMatSuplente.value].filter(Boolean).join(" ").trim();
+        }
+      };
+      const splitNombreCompletoPadreS = () => {
+        if (selectParentescoSuplente.value === "Padre") {
+          const partes = campoNombreCompletoPadre.value.trim().split(/\s+/);
+          if (partes.length >= 3) {
+            campoNombresSuplente.value = partes.slice(0, -2).join(" ");
+            campoApPatSuplente.value = partes.slice(-2, -1)[0];
+            campoApMatSuplente.value = partes.slice(-1)[0];
+          } else if (partes.length === 2) {
+            campoNombresSuplente.value = partes[0];
+            campoApPatSuplente.value = partes[1];
+            campoApMatSuplente.value = "";
+          } else if (partes.length === 1) {
+            campoNombresSuplente.value = partes[0];
+            campoApPatSuplente.value = "";
+            campoApMatSuplente.value = "";
+          }
+        }
+      };
+      campoNombresSuplente.addEventListener('input', updateNombreCompletoPadreS);
+      campoApPatSuplente.addEventListener('input', updateNombreCompletoPadreS);
+      campoApMatSuplente.addEventListener('input', updateNombreCompletoPadreS);
+      campoNombreCompletoPadre.addEventListener('input', splitNombreCompletoPadreS);
+      syncListeners.push({el: campoNombresSuplente, type: 'input', handler: updateNombreCompletoPadreS});
+      syncListeners.push({el: campoApPatSuplente, type: 'input', handler: updateNombreCompletoPadreS});
+      syncListeners.push({el: campoApMatSuplente, type: 'input', handler: updateNombreCompletoPadreS});
+      syncListeners.push({el: campoNombreCompletoPadre, type: 'input', handler: splitNombreCompletoPadreS});
+    }
+
+    if (titularEsMadre && campoDirTitular && campoDirMadre)       syncCampoVinculado(campoDirTitular, campoDirMadre);
+    if (titularEsMadre && campoComTitular && campoComMadre)       syncCampoVinculado(campoComTitular, campoComMadre);
+    if (titularEsMadre && campoTelTitular && campoTelMadre)       syncCampoVinculado(campoTelTitular, campoTelMadre);
+    if (titularEsMadre && campoEmailTitular && campoEmailMadre)   syncCampoVinculado(campoEmailTitular, campoEmailMadre);
+    if (titularEsMadre && campoEscTitular && campoEscMadre)       agregarSyncBidireccional([campoEscTitular, campoEscMadre], 'change');
+    if (titularEsMadre && campoProfTitular && campoProfMadre)     agregarSyncBidireccional([campoProfTitular, campoProfMadre], 'input');
+    if (titularEsMadre && campoRutTitular && campoRutMadre)       syncCampoVinculado(campoRutTitular, campoRutMadre);
+
+    if (titularEsPadre && campoDirTitular && campoDirPadre)       syncCampoVinculado(campoDirTitular, campoDirPadre);
+    if (titularEsPadre && campoComTitular && campoComPadre)       syncCampoVinculado(campoComTitular, campoComPadre);
+    if (titularEsPadre && campoTelTitular && campoTelPadre)       syncCampoVinculado(campoTelTitular, campoTelPadre);
+    if (titularEsPadre && campoEmailTitular && campoEmailPadre)   syncCampoVinculado(campoEmailTitular, campoEmailPadre);
+    if (titularEsPadre && campoEscTitular && campoEscPadre)       agregarSyncBidireccional([campoEscTitular, campoEscPadre], 'change');
+    if (titularEsPadre && campoProfTitular && campoProfPadre)     agregarSyncBidireccional([campoProfTitular, campoProfPadre], 'input');
+    if (titularEsPadre && campoRutTitular && campoRutPadre)       syncCampoVinculado(campoRutTitular, campoRutPadre);
+
+    if (suplenteEsMadre && campoDirSuplente && campoDirMadre)     syncCampoVinculado(campoDirSuplente, campoDirMadre);
+    if (suplenteEsMadre && campoComSuplente && campoComMadre)     syncCampoVinculado(campoComSuplente, campoComMadre);
+    if (suplenteEsMadre && campoTelSuplente && campoTelMadre)     syncCampoVinculado(campoTelSuplente, campoTelMadre);
+    if (suplenteEsMadre && campoEmailSuplente && campoEmailMadre) syncCampoVinculado(campoEmailSuplente, campoEmailMadre);
+    if (suplenteEsMadre && campoEscSuplente && campoEscMadre)     agregarSyncBidireccional([campoEscSuplente, campoEscMadre], 'change');
+    if (suplenteEsMadre && campoProfSuplente && campoProfMadre)   agregarSyncBidireccional([campoProfSuplente, campoProfMadre], 'input');
+    if (suplenteEsMadre && campoRutSuplente && campoRutMadre)     syncCampoVinculado(campoRutSuplente, campoRutMadre);
+
+    if (suplenteEsPadre && campoDirSuplente && campoDirPadre)     syncCampoVinculado(campoDirSuplente, campoDirPadre);
+    if (suplenteEsPadre && campoComSuplente && campoComPadre)     syncCampoVinculado(campoComSuplente, campoComPadre);
+    if (suplenteEsPadre && campoTelSuplente && campoTelPadre)     syncCampoVinculado(campoTelSuplente, campoTelPadre);
+    if (suplenteEsPadre && campoEmailSuplente && campoEmailPadre) syncCampoVinculado(campoEmailSuplente, campoEmailPadre);
+    if (suplenteEsPadre && campoEscSuplente && campoEscPadre)     agregarSyncBidireccional([campoEscSuplente, campoEscPadre], 'change');
+    if (suplenteEsPadre && campoProfSuplente && campoProfPadre)   agregarSyncBidireccional([campoProfSuplente, campoProfPadre], 'input');
+    if (suplenteEsPadre && campoRutSuplente && campoRutPadre)     syncCampoVinculado(campoRutSuplente, campoRutPadre);
+
+    let grupos = [
+      [campoDirTitular, titularEsPadre ? campoDirPadre : null, titularEsMadre ? campoDirMadre : null].filter(Boolean),
+      [campoDirSuplente, suplenteEsPadre ? campoDirPadre : null, suplenteEsMadre ? campoDirMadre : null].filter(Boolean),
+      [campoComTitular, titularEsPadre ? campoComPadre : null, titularEsMadre ? campoComMadre : null].filter(Boolean),
+      [campoComSuplente, suplenteEsPadre ? campoComPadre : null, suplenteEsMadre ? campoComMadre : null].filter(Boolean),
+      [campoTelTitular, titularEsPadre ? campoTelPadre : null, titularEsMadre ? campoTelMadre : null].filter(Boolean),
+      [campoTelSuplente, suplenteEsPadre ? campoTelPadre : null, suplenteEsMadre ? campoTelMadre : null].filter(Boolean),
+      [campoEmailTitular, titularEsPadre ? campoEmailPadre : null, titularEsMadre ? campoEmailMadre : null].filter(Boolean),
+      [campoEmailSuplente, suplenteEsPadre ? campoEmailPadre : null, suplenteEsMadre ? campoEmailMadre : null].filter(Boolean),
+      [campoRutTitular, titularEsPadre ? campoRutPadre : null, titularEsMadre ? campoRutMadre : null].filter(Boolean),
+      [campoRutSuplente, suplenteEsPadre ? campoRutPadre : null, suplenteEsMadre ? campoRutMadre : null].filter(Boolean),
+    ];
+    grupos.forEach((grupo, idx) => {
+      if (grupo.length > 1) {
+        let eventType = 'input';
+        if (idx === 1 || idx === 3) eventType = 'change';
+        agregarSyncBidireccional(grupo, eventType);
+      }
+    });
+
+    let grupoDirAlumno = [campoDirAlumno];
+let grupoComAlumno = [campoComAlumno];
+if (selectViveCon.value === "Padre" && (titularEsPadre || suplenteEsPadre)) {
+  grupoDirAlumno.push(campoDirPadre);
+  grupoComAlumno.push(campoComPadre);
+  if (titularEsPadre) grupoDirAlumno.push(campoDirTitular), grupoComAlumno.push(campoComTitular);
+  if (suplenteEsPadre) grupoDirAlumno.push(campoDirSuplente), grupoComAlumno.push(campoComSuplente);
+}
+else if (selectViveCon.value === "Madre" && (titularEsMadre || suplenteEsMadre)) {
+  grupoDirAlumno.push(campoDirMadre);
+  grupoComAlumno.push(campoComMadre);
+  if (titularEsMadre) grupoDirAlumno.push(campoDirTitular), grupoComAlumno.push(campoComTitular);
+  if (suplenteEsMadre) grupoDirAlumno.push(campoDirSuplente), grupoComAlumno.push(campoComSuplente);
+}
+else if (selectViveCon.value === "Ambos padres") {
+  grupoDirAlumno.push(campoDirPadre, campoDirMadre);
+  grupoComAlumno.push(campoComPadre, campoComMadre);
+}
+else if (selectViveCon.value === "Otro") {
+  // No apoderados ni padres, solo alumno y el campo "otro"
+} else {
+  if (selectViveCon.value === "Padre") {
+    grupoDirAlumno.push(campoDirPadre);
+    grupoComAlumno.push(campoComPadre);
+  } else if (selectViveCon.value === "Madre") {
+    grupoDirAlumno.push(campoDirMadre);
+    grupoComAlumno.push(campoComMadre);
+  }
+}
+    grupoDirAlumno = [...new Set(grupoDirAlumno.filter(Boolean))];
+    grupoComAlumno = [...new Set(grupoComAlumno.filter(Boolean))];
+    if (grupoDirAlumno.length > 1) agregarSyncBidireccional(grupoDirAlumno, 'input');
+    if (grupoComAlumno.length > 1) agregarSyncBidireccional(grupoComAlumno, 'change');
+  }
+
+  function sincronizarParentescoConCargo(persona, cargo) {
+    if (persona === 'madre') {
+      if (cargo === "titular") {
+        if (selectParentescoTitular.value !== "Madre") selectParentescoTitular.value = "Madre";
+        if (selectCargoPadre.value === "titular") selectCargoPadre.value = "";
+        sincronizarCampos();
+      } else if (cargo === "suplente") {
+        if (selectParentescoSuplente.value !== "Madre") selectParentescoSuplente.value = "Madre";
+        if (selectCargoPadre.value === "suplente") selectCargoPadre.value = "";
+        sincronizarCampos();
+      } else {
+        if (selectParentescoTitular.value === "Madre") selectParentescoTitular.value = "";
+        if (selectParentescoSuplente.value === "Madre") selectParentescoSuplente.value = "";
+        sincronizarCampos();
+      }
+    } else if (persona === 'padre') {
+      if (cargo === "titular") {
+        if (selectParentescoTitular.value !== "Padre") selectParentescoTitular.value = "Padre";
+        if (selectCargoMadre.value === "titular") selectCargoMadre.value = "";
+        sincronizarCampos();
+      } else if (cargo === "suplente") {
+        if (selectParentescoSuplente.value !== "Padre") selectParentescoSuplente.value = "Padre";
+        if (selectCargoMadre.value === "suplente") selectCargoMadre.value = "";
+        sincronizarCampos();
+      } else {
+        if (selectParentescoTitular.value === "Padre") selectParentescoTitular.value = "";
+        if (selectParentescoSuplente.value === "Padre") selectParentescoSuplente.value = "";
+        sincronizarCampos();
+      }
+    }
+  }
+
+  function sincronizarCargoConParentesco(tipo, valor) {
+    if (valor === "Madre") {
+      if (tipo === "titular") {
+        if (selectCargoMadre.value !== "titular") selectCargoMadre.value = "titular";
+        if (selectCargoPadre.value === "titular") selectCargoPadre.value = "";
+      } else if (tipo === "suplente") {
+        if (selectCargoMadre.value !== "suplente") selectCargoMadre.value = "suplente";
+        if (selectCargoPadre.value === "suplente") selectCargoPadre.value = "";
+      }
+    } else if (valor === "Padre") {
+      if (tipo === "titular") {
+        if (selectCargoPadre.value !== "titular") selectCargoPadre.value = "titular";
+        if (selectCargoMadre.value === "titular") selectCargoMadre.value = "";
+      } else if (tipo === "suplente") {
+        if (selectCargoPadre.value !== "suplente") selectCargoPadre.value = "suplente";
+        if (selectCargoMadre.value === "suplente") selectCargoMadre.value = "";
+      }
+    } else {
+      if (tipo === "titular") {
+        if (selectCargoMadre.value === "titular") selectCargoMadre.value = "";
+        if (selectCargoPadre.value === "titular") selectCargoPadre.value = "";
+      } else if (tipo === "suplente") {
+        if (selectCargoMadre.value === "suplente") selectCargoMadre.value = "";
+        if (selectCargoPadre.value === "suplente") selectCargoPadre.value = "";
+      }
+    }
+  }
+
+  function agregarSyncBidireccional(grupo, eventType) {
+    let updating = false;
+    grupo.forEach(campo => {
+      if (!campo) return;
+      const handler = function() {
+        if (updating) return;
+        updating = true;
+        grupo.forEach(otro => {
+          if (otro !== campo && otro) otro.value = campo.value;
+        });
+        updating = false;
+      };
+      campo.addEventListener(eventType, handler);
+      syncListeners.push({el: campo, type: eventType, handler});
+    });
+    let val = (grupo.find(c => c && c.value && c.value.trim() !== '') || {}).value || '';
+    if (val !== '') grupo.forEach(campo => { if (campo) campo.value = val; });
+  }
+
+  if (selectViveCon) selectViveCon.addEventListener('change', sincronizarCampos);
+
+  sincronizarCampos();
+})();
+
+//Fin sincronizacion
+//**************************************************
+//**************************************************************
+//****************************************************************************
+document.querySelectorAll("#fichaForm input[id$='_otro']").forEach(inp => {
+  inp.addEventListener('input', limpiarErrorGeneral);
+});
+if (typeof sincronizaTodosVinculados === 'function') sincronizaTodosVinculados();
+function marcarCamposVaciosYCompletos() {
+  // Inputs de texto, email y date
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="date"]').forEach(inp => {
+    // Considera vacío si el valor es "" o sólo espacios
+    if (!inp.value.trim()) {
+      inp.classList.add('input-empty');
+      inp.classList.remove('input-filled');
+    } else {
+      inp.classList.remove('input-empty');
+      inp.classList.add('input-filled');
+    }
+  });
+  // Combobox/selects
+  document.querySelectorAll('select').forEach(sel => {
+    // Considera vacío si el valor es cadena vacía
+    if (!sel.value) {
+      sel.classList.add('input-empty');
+      sel.classList.remove('input-filled');
+    } else {
+      sel.classList.remove('input-empty');
+      sel.classList.add('input-filled');
+    }
+  });
+}
+
+// --- VIVE CON (campo12_combo) ---
+var selectViveCon = document.getElementById('campo12_combo');
+var inputViveConOtro = document.getElementById('campo12_otro');
+if (selectViveCon) {
+  var opciones = ["Padre", "Madre", "Apoderado Titular", "Apoderado Suplente"];
+  if (datos.campo12 && opciones.includes(datos.campo12)) {
+    selectViveCon.value = datos.campo12;
+    if (inputViveConOtro) {
+      inputViveConOtro.style.display = "none";
+      inputViveConOtro.value = "";
+    }
+  } else if (datos.campo12 && datos.campo12.trim() !== "") {
+    selectViveCon.value = "Otro";
+    if (inputViveConOtro) {
+      inputViveConOtro.style.display = "";
+      inputViveConOtro.value = datos.campo12;
+    }
+  } else {
+    selectViveCon.value = "";
+    if (inputViveConOtro) {
+      inputViveConOtro.style.display = "none";
+      inputViveConOtro.value = "";
+    }
+  }
+
+  // el factory asegúra que NO borra el valor al ocultar
+  selectViveCon.onchange = selectOtroHandlerFactory(inputViveConOtro);
+}
+
+  // Llama la función al cargar para actualizar el color de todos los campos
+  marcarCamposVaciosYCompletos();
+
+  // Agrega listeners a todos los campos relevantes para que cambien de color al editar
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="date"], select').forEach(inp => {
+    inp.addEventListener('input', marcarCamposVaciosYCompletos);
+    inp.addEventListener('change', marcarCamposVaciosYCompletos);
+  });
+
+  // BOTÓN LIMPIAR EN HEADER (nuevo)
+  var btnLimpiarForm = document.getElementById('btnLimpiarForm');
+  if (btnLimpiarForm) {
+    btnLimpiarForm.addEventListener('click', function() {
+      // Fecha de hoy en yyyy-mm-dd
+      const hoy = new Date();
+      const yyyy = hoy.getFullYear();
+      const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+      const dd = String(hoy.getDate()).padStart(2, '0');
+      const hoyStr = `${yyyy}-${mm}-${dd}`;
+      // Valores por defecto para limpiar
+      const valores = {
+        campo11: "Linares",
+        campo34: "Linares",
+        campo47: "Linares",
+        campo59: "Linares",
+        campo68: "Linares",
+        campo13: "Chilena",
+        campo3: hoyStr
+      };
+      inicializarFormulario(valores);
+
+      // Vacía todos los input text/email/date excepto los de valores por defecto
+      document.querySelectorAll("#fichaForm input[type='text'], #fichaForm input[type='date'], #fichaForm input[type='email']").forEach(inp => {
+        if (valores[inp.name] !== undefined) {
+          inp.value = valores[inp.name];
+        } else {
+          inp.value = '';
+        }
+      });
+
+      // Vacía y selecciona todos los selects como corresponde
+      document.querySelectorAll("#fichaForm select").forEach(sel => {
+        if (["campo11","campo34","campo47","campo59","campo68"].includes(sel.id)) {
+          sel.value = "Linares";
+        } else if (sel.id === "campo13") {
+          sel.value = "Chilena";
+        } else if (sel.id === "campo3") {
+          sel.value = hoyStr;
+        } else {
+          sel.value = '';
+        }
+        sel.dispatchEvent(new Event('change'));
+      });
+
+      // Desmarca todos los checkboxes
+      document.querySelectorAll("#fichaForm input[type='checkbox']").forEach(cb => cb.checked = false);
+
+      // Oculta todos los inputs "otro"
+      document.querySelectorAll("#fichaForm input[id$='_otro']").forEach(inp => {
+        inp.value = '';
+        inp.style.display = 'none';
+        inp.required = false;
+      });
+
+      // NEE: oculta los checkboxes y desmarca todo por defecto
+      var campo17 = document.getElementById('campo17');
+      var neeRow = document.getElementById('neeCheckboxesRow');
+      if (campo17 && neeRow) {
+        campo17.value = '';
+        neeRow.style.display = 'none';
+        neeRow.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+      }
+    });
+  }
+});
+  </script>
+  <script>
+    // NAVEGACIÓN MULTIPÁGINA
+    function mostrarPagina(id) {
+  document.querySelectorAll('.pagina-form').forEach(sec => sec.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // Cambia el título
+  const titulos = {
+    pagina1: "Antecedentes del estudiante",
+    pagina2: "Necesidades Educativas Especiales (N.E.E.)",
+    pagina3: "Antecedentes de salud del estudiante",
+    pagina4: "Antecedentes del apoderado titular",
+    pagina5: "Antecedentes del apoderado suplente",
+    pagina6: "Antecedentes Familiares del Estudiante",
+    pagina7: "Otros Antecedentes"
+  };
+  const tituloElem = document.getElementById('formTitle');
+  if (tituloElem) {
+    tituloElem.innerText = titulos[id] || "Ficha de matrícula";
+  }
+}
+
+// Validador de teléfono chileno (+ y dígitos, sin espacios)
+function validarTelefono(valor) {
+  return /^(\+)?\d{6,15}$/.test(valor); // permite + al inicio, 6 a 15 dígitos (ajusta si quieres más/menos)
+}
+
+// Validador de RUT chileno, ignorando validación si el rut es provisional
+function validarRut(rut, rutInput) {
+  // Si rutInput es un input DOM y tiene un checkbox "rutProvisionalXX" asociado y está chequeado, no validar
+  if (rutInput && rutInput.id) {
+    var chk = document.getElementById('rutProvisional' + rutInput.id.replace(/\D/g, ''));
+    if (chk && chk.checked) return true;
+  }
+  rut = rut.replace(/\./g, '').replace(/-/g, '').toUpperCase();
+  if (!/^(\d{7,8})([0-9K])$/.test(rut)) return false;
+  let cuerpo = rut.slice(0, -1), dv = rut.slice(-1);
+  let suma = 0, multiplo = 2;
+  for (let i = cuerpo.length - 1; i >= 0; i--) {
+    suma += parseInt(cuerpo.charAt(i)) * multiplo;
+    multiplo = multiplo < 7 ? multiplo + 1 : 2;
+  }
+  let dvEsperado = 11 - (suma % 11);
+  dvEsperado = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString();
+  return dv === dvEsperado;
+}
+
+    // === BOTONES SIGUIENTE/ANTERIOR MULTIPÁGINA ===
+    document.querySelectorAll('.btn-siguiente').forEach(btn => {
+      btn.onclick = function() {
+        if (!validarPaginaActual()) {
+          const next = btn.getAttribute('data-next');
+          mostrarPagina(next);
+        }
+      }
+    });
+    document.querySelectorAll('.btn-anterior').forEach(btn => {
+      btn.onclick = function() {
+        const prev = btn.getAttribute('data-prev');
+        mostrarPagina(prev);
+      }
+    });
+
+  // Mapea inputOtro al número/nombre de página
+function validarCamposOtroEnTodasLasPaginas() {
+  const camposOtro = [
+    {input: document.getElementById('campo11_otro'), pagina: 1, nombre: 'Comuna del estudiante'},
+    {input: document.getElementById('campo12_otro'), pagina: 1, nombre: 'Vive con'},
+    {input: document.getElementById('campo15_otro'), pagina: 1, nombre: 'Colegio de procedencia'},
+    {input: document.getElementById('campo38_otro'), pagina: 4, nombre: 'Escolaridad apoderado titular'},
+    {input: document.getElementById('campo39_otro'), pagina: 4, nombre: 'Parentesco apoderado titular'},
+    {input: document.getElementById('campo51_otro'), pagina: 5, nombre: 'Escolaridad apoderado suplente'},
+    {input: document.getElementById('campo52_otro'), pagina: 5, nombre: 'Parentesco apoderado suplente'},
+    {input: document.getElementById('campo61_otro'), pagina: 6, nombre: 'Escolaridad madre'},
+    {input: document.getElementById('campo70_otro'), pagina: 6, nombre: 'Escolaridad padre'},
+    {input: document.getElementById('campo80_otro'), pagina: 7, nombre: 'Tipo de religión'}
+  ];
+
+  for (let campo of camposOtro) {
+    if (
+      campo.input &&
+      campo.input.style.display !== 'none' &&
+      campo.input.value.trim() === ''
+    ) {
+      // Activar la página correspondiente
+      // Suponiendo que tus páginas tienen clases 'pagina-form' y un orden indexado desde 1
+      const todasPaginas = document.querySelectorAll('.pagina-form');
+      todasPaginas.forEach((pag, idx) => {
+        pag.classList.toggle('active', idx === (campo.pagina - 1));
+      });
+
+      // Hacer scroll al campo vacío
+      if (campo.input.scrollIntoView) {
+        campo.input.scrollIntoView({behavior: "smooth", block: "center"});
+        campo.input.focus();
+      }
+
+      return {
+        hayError: true,
+        pagina: campo.pagina,
+        nombre: campo.nombre
+      };
+    }
+  }
+  return {hayError: false};
+}
+    // === SUBMIT GUARDAR ===
+document.getElementById('fichaForm').onsubmit = function(e) {
+  e.preventDefault();
+
+  // Quita required a todos los inputs '_otro' ocultos antes de validar
+  document.querySelectorAll("#fichaForm input[id$='_otro']").forEach(inp => {
+    if (inp.style.display === "none" || inp.offsetParent === null) inp.required = false;
+  });
+  limpiarErrorGeneral();
+
+  // Limpia mensajes previos
+  document.querySelectorAll('.error-message').forEach(e => e.style.display = 'none');
+  var errorGeneralDiv = document.getElementById('errorGeneral');
+  if (errorGeneralDiv) errorGeneralDiv.style.display = 'none';
+
+  // --- NUEVO BLOQUE: chequeo de campos vacíos con confirmación ---
+  let campoVacio = null;
+  let paginaCampoVacio = null;
+  let nombreCampoVacio = null;
+
+  document.querySelectorAll('.pagina-form').forEach((pagina, idx) => {
+    if (campoVacio) return; // Ya encontrado, no busques más
+    const inputs = pagina.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      // Excluir checkboxes
+      if (input.type === "checkbox") return;
+
+      // Excluir radios (opcional, si no deseas validar radios)
+      // if (input.type === "radio") return;
+
+      // Excluir campos "_otro" si su select asociado no está en "Otro"
+      if (input.id && input.id.endsWith('_otro')) {
+        // Busca el select asociado. Suponemos que el select está antes del input en el DOM
+        const selectId = input.id.replace('_otro', '');
+        const select = document.getElementById(selectId) || pagina.querySelector('select[name="'+selectId+'"]');
+        if (!select || select.value !== "Otro") return;
+      }
+
+      // Excluir campos campo25_texto, campo26_texto, campo27_texto si su select asociado está en "No"
+      if (
+        (input.id === "campo25_texto" && document.getElementById('campo25_combo') && document.getElementById('campo25_combo').value === "No") ||
+        (input.id === "campo26_texto" && document.getElementById('campo26_combo') && document.getElementById('campo26_combo').value === "No") ||
+        (input.id === "campo27_texto" && document.getElementById('campo27_combo') && document.getElementById('campo27_combo').value === "No")
+      ) {
+        return;
+      }
+
+      // Solo valida los input activos (no disabled, no hidden)
+      if (!input.disabled && input.type !== "hidden" && input.value.trim() === "") {
+        campoVacio = input;
+        paginaCampoVacio = idx + 1; // Si tu índice empieza en 1
+        // Intenta obtener un label asociado, si existe
+        const label = pagina.querySelector(`label[for="${input.id}"]`);
+        nombreCampoVacio = label ? label.textContent.trim() : input.name || input.id;
+        return;
+      }
+    });
+  });
+
+  if (campoVacio) {
+    // Activa la página con el campo vacío y hace scroll
+    document.querySelectorAll('.pagina-form').forEach((pag, idx) => {
+      pag.classList.toggle('active', idx === (paginaCampoVacio - 1));
+    });
+    if (campoVacio.scrollIntoView) campoVacio.scrollIntoView({behavior: "smooth", block: "center"});
+    campoVacio.focus();
+
+    // Mensaje personalizado y confirmación
+    const mensaje = `Hay un campo vacío en la página ${paginaCampoVacio} (${nombreCampoVacio}).\n¿Deseas guardar de todas formas?`;
+    if (!window.confirm(mensaje)) {
+      // Si el usuario cancela, no ejecutar nada más, retorna false y termina aquí.
+      return false;
+    }
+    // Si acepta, sigue guardando normalmente
+  }
+ 
+
+  // Validación de campos "otro"
+  // Validación personalizada de campos "otro"
+  const errorOtro = validarCamposOtroEnTodasLasPaginas();
+  if (errorOtro.hayError) {
+    const errorDiv = document.getElementById('errorGeneral');
+    if (errorDiv) {
+      errorDiv.innerHTML = `Hay un campo "Otro" vacío en la página ${errorOtro.pagina} (${errorOtro.nombre}).<br>Por favor complétalo para poder guardar.`;
+      errorDiv.style.display = '';
+      errorDiv.scrollIntoView({behavior: "smooth"});
+    } else {
+      alert(`Hay un campo "Otro" vacío en la página ${errorOtro.pagina} (${errorOtro.nombre}). Por favor complétalo para poder guardar.`);
+    }
+    return false;
+  }
+
+  // Deshabilita todos los botones de submit mientras se guarda
+  const submitButtons = this.querySelectorAll('button[type="submit"]');
+  submitButtons.forEach(btn => btn.disabled = true);
+
+  // ====== Validar todas las páginas antes de guardar ======
+  if (validarTodasLasPaginas()) {
+    // Hay error en alguna página, no guardar
+    submitButtons.forEach(btn => btn.disabled = false);
+
+    // Llevar al usuario a la primera página con error (opcional, pero recomendado)
+    const primeraConError = document.querySelector('.pagina-form .input-error');
+    if (primeraConError) {
+      const seccion = primeraConError.closest('.pagina-form');
+      document.querySelectorAll('.pagina-form').forEach(sec => sec.classList.remove('active'));
+      seccion.classList.add('active');
+      // Opcional: scroll hacia el error
+      primeraConError.scrollIntoView({behavior: "smooth", block: "center"});
+    }
+    return false;
+  }
+  // ==============================================================
+
+  const data = Object.fromEntries(new FormData(this).entries());
+
+ // --- REPITENTE: determinar valor de campo14 ---
+var repitenteCombo = document.getElementById('repitenteCombo');
+var repitenteCheckboxes = document.querySelectorAll('#repitenteCheckboxesRow input[type="checkbox"]:checked');
+if (repitenteCombo && repitenteCombo.value === "No") {
+  data.campo14 = "No";
+} else if (repitenteCombo && repitenteCombo.value === "Sí") {
+  var seleccionados = Array.from(repitenteCheckboxes).map(cb => cb.value);
+  if (seleccionados.length > 0) {
+    data.campo14 = "Si " + seleccionados.join(", ");
+  } else {
+    data.campo14 = "Si";
+  }
+} else {
+  data.campo14 = "";
+}
+
+  // Si seleccionó "Otro", reemplaza campos
+  if (data.campo15 === "Otro") data.campo15 = data.campo15_otro;
+  if (data.campo11 === "Otro") data.campo11 = data.campo11_otro;
+   if (data.campo18 === "Otro") data.campo18 = data.campo18_otro;
+  if (data.campo38 === "Otro") data.campo38 = data.campo38_otro;
+  if (data.campo51 === "Otro") data.campo51 = data.campo51_otro;
+  if (data.campo61 === "Otro") data.campo61 = data.campo61_otro;
+  if (data.campo70 === "Otro") data.campo70 = data.campo70_otro;
+  if (data.campo39 === "Otro") data.campo39 = data.campo39_otro;
+  if (data.campo52 === "Otro") data.campo52 = data.campo52_otro;
+  if (data.campo80 === "Otro") data.campo80 = data.campo80_otro;
+
+  // Antecedentes de salud
+  ['25','26','27'].forEach(function(num){
+    var combo = document.getElementById('campo'+num+'_combo');
+    var texto = document.getElementById('campo'+num+'_texto');
+    if(combo && texto) {
+      if(combo.value === "Sí") {
+        data['campo'+num] = texto.value;
+      } else if(combo.value === "No") {
+        data['campo'+num] = "No";
+      } else {
+        data['campo'+num] = "";
+      }
+    }
+  });
+
+  // Religión participa (campo74)
+  data.campo74 = document.getElementById('campo74') ? document.getElementById('campo74').value : '';
+
+  // Tipo de religión (campos 78, 79, 80)
+  var tipoReligion = document.getElementById('religionTipo') ? document.getElementById('religionTipo').value : '';
+  if (tipoReligion === "Católica") {
+    data.campo78 = 'X';
+    data.campo79 = '';
+    data.campo80 = '';
+  } else if (tipoReligion === "Evangélica") {
+    data.campo78 = '';
+    data.campo79 = 'X';
+    data.campo80 = '';
+  } else if (tipoReligion === "Otro") {
+    data.campo78 = '';
+    data.campo79 = '';
+    data.campo80 = document.getElementById('campo80_otro') ? document.getElementById('campo80_otro').value : '';
+  } else {
+    data.campo78 = '';
+    data.campo79 = '';
+    data.campo80 = '';
+  }
+  console.log('[Religión] Valor final en submit:', {
+    tipoReligion: tipoReligion,
+    campo80_otro: document.getElementById('campo80_otro')?.value,
+    campo80: data.campo80,
+    data
+  });
+
+  //uso de imagen
+  data.campo81 = document.getElementById('campo81') ? document.getElementById('campo81').value : '';
+
+  // Apoderado titular - cursos (campo40)
+  var seleccionados40 = [];
+  document.querySelectorAll('input[name="campo40_curso"]:checked').forEach(cb => {
+    seleccionados40.push(cb.value);
+  });
+  data.campo40 = seleccionados40.length > 0 ? seleccionados40.join(", ") : "No";
+
+  // Apoderado suplente - cursos (campo53)
+  var seleccionados53 = [];
+  document.querySelectorAll('input[name="campo53_curso"]:checked').forEach(cb => {
+    seleccionados53.push(cb.value);
+  });
+  data.campo53 = seleccionados53.length > 0 ? seleccionados53.join(", ") : "No";
+
+  // Vive con: usar valor del combo o del "otro"
+  if (document.getElementById('campo12_combo')) {
+    if (document.getElementById('campo12_combo').value === "Otro") {
+      data.campo12 = document.getElementById('campo12_otro').value;
+    } else {
+      data.campo12 = document.getElementById('campo12_combo').value;
+    }
+  }
+  
+  google.script.run
+    .withSuccessHandler(() => {
+      alert("Datos guardados correctamente");
+      google.script.run.actualizarFichaMatricula();
+      // Rehabilita los botones de submit tras guardar
+      submitButtons.forEach(btn => btn.disabled = false);
+    })
+    .withFailureHandler(() => {
+      alert("Error al guardar. Intente nuevamente.");
+      submitButtons.forEach(btn => btn.disabled = false);
+    })
+    .llenarAntecedentesEstudiante(data);
+};
+  </script>
+</body>
+</html>
